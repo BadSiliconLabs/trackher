@@ -2,8 +2,7 @@
 /// Working in whole days avoids DST / timezone surprises.
 library;
 
-int dayNumber(DateTime d) =>
-    DateTime.utc(d.year, d.month, d.day).millisecondsSinceEpoch ~/ 86400000;
+int dayNumber(DateTime d) => DateTime.utc(d.year, d.month, d.day).millisecondsSinceEpoch ~/ 86400000;
 
 DateTime fromDayNumber(int n) {
   final u = DateTime.fromMillisecondsSinceEpoch(n * 86400000, isUtc: true);

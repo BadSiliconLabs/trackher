@@ -1,17 +1,23 @@
-# trackher
+# TrackHer
 
-A new Flutter project.
+Android app (Flutter) for boyfriends: it tracks your girlfriend's cycle so you can support her better.
+Enter a few period start dates (gaps between them are fine) and a Bayesian model works out the rest:
+a forecast with uncertainty, the current phase, practical tips, her own notes, and switchable
+notifications. Everything stays on the phone.
 
-## Getting Started
+See [docs/DESIGN.md](docs/DESIGN.md) for the full design and the prediction model.
 
-This project is a starting point for a Flutter application.
+## Develop
 
-A few resources to get you started if this is your first Flutter project:
+```sh
+flutter pub get
+flutter test                                          # engine, storage and state tests
+flutter test test/screens_test.dart --update-goldens  # re-render screen PNGs in test/goldens
+flutter run                                           # on a connected device or emulator
+flutter build apk --release                           # build/app/outputs/flutter-apk/app-release.apk
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Layout: `lib/engine` holds the pure-Dart predictor, phases and tips logic; `lib/state` the app state;
+`lib/ui` the screens; `assets/tips.json` the tip library.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Not medical advice and not contraception.

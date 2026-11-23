@@ -164,8 +164,8 @@ dates, and check that the posterior covers the truth and that the 80% intervals 
 
 ## 6. Notifications
 
-Uses `flutter_local_notifications` with exact-ish scheduling (falling back to inexact if
-the exact-alarm permission is denied). Notifications are scheduled ahead, about 45 days and
+Uses `flutter_local_notifications` with *inexact while-idle* alarms, so no exact-alarm
+permission is needed (reminders don't need minute precision). Notifications are scheduled ahead, about 45 days and
 at most 60, and **rescheduled whenever data or settings change, and when the app opens**.
 
 | Notification | Default | When |
@@ -204,8 +204,10 @@ test/                          predictor tests (synthetic), phases, tips, store 
   doesn't need heavier frameworks.
 - **Engine** is pure Dart and fully unit-tested. The forecast is recomputed on every data
   change, which takes milliseconds.
-- **Packages**: `provider`, `path_provider`, `flutter_local_notifications`, `timezone`,
-  `flutter_timezone`, `table_calendar`, `fl_chart`, `intl`, `share_plus`, `file_picker`.
+- **Packages**: `material_ui`, `provider`, `path_provider`, `flutter_local_notifications`, `timezone`,
+  `flutter_timezone`, `intl`, `share_plus`, `file_picker`. The month calendar and bell-curve chart
+  are custom widgets. Third-party calendar and chart packages still depend on the deprecated
+  `flutter/material.dart`, and their theming wouldn't match the app.
 - **Data file** `trackher.json` has a schema version for migrations.
 - **UI**: Material 3, warm rose/plum palette, light and dark.
 
@@ -217,11 +219,11 @@ test/                          predictor tests (synthetic), phases, tips, store 
 - _Later:_ an optional app lock (biometric/PIN).
 
 ## 9. Milestones
-1. **M1 engine**: predictor + phases + tests
-2. **M2 app skeleton**: storage, state, onboarding, Home, log period
-3. **M3 views**: calendar, forecast chart, tips, notes
-4. **M4 notifications + settings**, export/import
-5. **M5 polish**: icon, empty states, release build
+1. ✅ **M1 engine**: predictor + phases + tests
+2. ✅ **M2 app skeleton**: storage, state, onboarding, Home, log period
+3. ✅ **M3 views**: calendar, forecast chart, tips, notes
+4. ✅ **M4 notifications + settings**, export/import
+5. 🔄 **M5 polish**: icon ✅, empty states ✅, release build, real-device testing, Play Store signing
 
 ## 10. Later ideas
 - App lock, home-screen widget, symptom correlations, a "shared mode" where she logs and

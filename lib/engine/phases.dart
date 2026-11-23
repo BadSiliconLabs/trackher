@@ -10,28 +10,23 @@ enum Phase { period, follicular, fertile, ovulation, luteal, pms }
 
 extension PhaseInfo on Phase {
   String get label => switch (this) {
-        Phase.period => 'Period',
-        Phase.follicular => 'Follicular',
-        Phase.fertile => 'Fertile window',
-        Phase.ovulation => 'Ovulation',
-        Phase.luteal => 'Luteal',
-        Phase.pms => 'PMS',
-      };
+    Phase.period => 'Period',
+    Phase.follicular => 'Follicular',
+    Phase.fertile => 'Fertile window',
+    Phase.ovulation => 'Ovulation',
+    Phase.luteal => 'Luteal',
+    Phase.pms => 'PMS',
+  };
 
   String get blurb => switch (this) {
-        Phase.period =>
-          'Her period. Energy can be low and cramps are common. Comfort, warmth and patience help most.',
-        Phase.follicular =>
-          'Hormones are rising and energy and mood often improve. A good time for plans and adventures.',
-        Phase.fertile =>
-          'Around ovulation. Often the time of highest energy, confidence and libido.',
-        Phase.ovulation =>
-          'Estimated ovulation day. Some people feel a twinge or mild pain on one side.',
-        Phase.luteal =>
-          'Progesterone rises. She may be more tired or want more calm and coziness.',
-        Phase.pms =>
-          'The days before her period. Mood swings, cravings, bloating and irritability are common. Be extra kind.',
-      };
+    Phase.period => 'Her period. Energy can be low and cramps are common. Comfort, warmth and patience help most.',
+    Phase.follicular => 'Hormones are rising and energy and mood often improve. A good time for plans and adventures.',
+    Phase.fertile => 'Around ovulation. Often the time of highest energy, confidence and libido.',
+    Phase.ovulation => 'Estimated ovulation day. Some people feel a twinge or mild pain on one side.',
+    Phase.luteal => 'Progesterone rises. She may be more tired or want more calm and coziness.',
+    Phase.pms =>
+      'The days before her period. Mood swings, cravings, bloating and irritability are common. Be extra kind.',
+  };
 }
 
 /// Phase for a cycle day [c] (0-based) of a cycle of length [len].
@@ -85,8 +80,7 @@ class Forecast {
 
   int get daysUntilNext => next.mode - todayDay;
 
-  Phase get likelyPhase =>
-      todayPhase.entries.reduce((a, b) => a.value >= b.value ? a : b).key;
+  Phase get likelyPhase => todayPhase.entries.reduce((a, b) => a.value >= b.value ? a : b).key;
 
   double get likelyPhaseProb => todayPhase[likelyPhase] ?? 0;
 

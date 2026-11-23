@@ -127,8 +127,7 @@ class StartForecast {
   }
 
   DateTime get modeDate => fromDayNumber(mode);
-  (int, int) interval(double level) =>
-      (quantile((1 - level) / 2), quantile(1 - (1 - level) / 2));
+  (int, int) interval(double level) => (quantile((1 - level) / 2), quantile(1 - (1 - level) / 2));
 }
 
 /// Posterior over (mu, sigma) on a grid.
