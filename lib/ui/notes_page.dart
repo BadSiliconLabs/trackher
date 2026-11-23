@@ -60,7 +60,7 @@ class NotesPage extends StatelessWidget {
                     runSpacing: 4,
                     children: [
                       if (n.phases.isEmpty) const _Mini('Always', null),
-                      for (final p in n.phases) _Mini('${p.emoji} ${p.label}', p.color),
+                      for (final p in n.phases) _Mini(p.label, p.color, icon: p.icon),
                     ],
                   ),
                 ),
@@ -76,7 +76,8 @@ class NotesPage extends StatelessWidget {
 class _Mini extends StatelessWidget {
   final String t;
   final Color? c;
-  const _Mini(this.t, this.c);
+  final IconData? icon;
+  const _Mini(this.t, this.c, {this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +85,15 @@ class _Mini extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-      child: Text(
-        t,
-        style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[Icon(icon, size: 12, color: color), const SizedBox(width: 4)],
+          Text(
+            t,
+            style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600),
+          ),
+        ],
       ),
     );
   }
@@ -140,7 +147,7 @@ Future<void> editNote(BuildContext context, HerNote? existing) async {
               children: [
                 for (final p in selectable)
                   FilterChip(
-                    avatar: Text(p.emoji),
+                    avatar: Icon(p.icon, size: 18),
                     label: Text(p.label),
                     selected: phases.contains(p),
                     onSelected: (s) => setS(() => s ? phases.add(p) : phases.remove(p)),

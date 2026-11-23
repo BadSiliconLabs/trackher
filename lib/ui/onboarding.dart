@@ -81,9 +81,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Spacer(),
-        Text('💝', style: theme.textTheme.displayMedium),
+        Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(color: theme.colorScheme.primaryContainer, borderRadius: BorderRadius.circular(20)),
+          child: Icon(Icons.radio_button_checked, size: 36, color: theme.colorScheme.onPrimaryContainer),
+        ),
         const SizedBox(height: 16),
-        Text('TrackHer', style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800)),
+        Text(kAppName, style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800)),
         const SizedBox(height: 12),
         Text(
           'Know where she is in her cycle and get practical ideas to support her: '

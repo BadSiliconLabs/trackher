@@ -73,6 +73,17 @@ void main() {
     });
   }
 
+  testWidgets('screen guide', (t) async {
+    t.view.physicalSize = const Size(1080, 2340);
+    t.view.devicePixelRatio = 2.75;
+    final s = await t.runAsync(() => makeState(true));
+    await t.pumpWidget(wrap(s!));
+    await t.pumpAndSettle();
+    await t.tap(find.byTooltip('Guide'));
+    await t.pumpAndSettle();
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/guide.png'));
+  });
+
   testWidgets('screen onboarding', (t) async {
     t.view.physicalSize = const Size(1080, 2340);
     t.view.devicePixelRatio = 2.75;

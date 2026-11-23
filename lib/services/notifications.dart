@@ -14,7 +14,7 @@ class NotificationService {
 
   static const _horizonDays = 45;
   static const _channel = AndroidNotificationDetails(
-    'trackher_reminders',
+    'tempo_reminders',
     'Reminders',
     channelDescription: 'Cycle heads-ups and daily tips',
     importance: Importance.defaultImportance,
@@ -67,7 +67,6 @@ class NotificationService {
     }
 
     final today = state.todayDay;
-    final name = s.herName.trim().isEmpty ? 'Her' : s.herName.trim();
 
     if (f != null) {
       for (final up in f.upcoming) {
@@ -78,23 +77,19 @@ class NotificationService {
           final lead = s.periodSoonLeadDays;
           await at(
             up.mode - lead,
-            'TrackHer · heads-up',
-            '$name\'s period may start in about $lead day${lead == 1 ? '' : 's'} (±$range). Check supplies and keep plans light 💝',
+            'Tempo',
+            'Heads-up for about $lead day${lead == 1 ? '' : 's'} from now (±$range). Open the app for details.',
           );
         }
         if (s.notifyPms) {
           await at(
             up.mode - 6,
-            'TrackHer · PMS window',
-            'The PMS window likely starts around now. Extra patience, snacks and hugs (if she wants them) 🫶',
+            'Tempo',
+            'A sensitive week likely starts now. Extra patience and kindness go a long way.',
           );
         }
         if (s.notifyFertile) {
-          await at(
-            up.mode - 19,
-            'TrackHer · fertile window',
-            'Estimated fertile window starts about now. Informational only, this is not contraception.',
-          );
+          await at(up.mode - 19, 'Tempo', 'A new window starts around now. Open for details.');
         }
       }
     }

@@ -14,15 +14,6 @@ extension TipCategoryInfo on TipCategory {
     TipCategory.words => 'Words',
     TipCategory.practical => 'Practical',
   };
-  String get emoji => switch (this) {
-    TipCategory.food => '🍲',
-    TipCategory.comfort => '🛋️',
-    TipCategory.affection => '🤗',
-    TipCategory.space => '🌿',
-    TipCategory.plans => '📅',
-    TipCategory.words => '💬',
-    TipCategory.practical => '🧰',
-  };
 }
 
 class Tip {

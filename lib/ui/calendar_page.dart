@@ -215,7 +215,7 @@ class _DaySheet extends StatelessWidget {
     if (f != null) {
       final ph = f.phaseOn(n);
       final pp = f.periodProbability(n);
-      info = '${ph.emoji} ${ph.label}';
+      info = ph.label;
       if (n >= state.todayDay && pp > 0.02 && within == null) info += ' · ${(pp * 100).round()}% chance of period';
     }
 
@@ -230,7 +230,17 @@ class _DaySheet extends StatelessWidget {
                 DateFormat.yMMMMEEEEd().format(day),
                 style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
               ),
-              if (info != null) Padding(padding: const EdgeInsets.only(top: 4), child: Text(info)),
+              if (info != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Row(
+                    children: [
+                      Icon(f!.phaseOn(n).icon, size: 18, color: f.phaseOn(n).color),
+                      const SizedBox(width: 6),
+                      Expanded(child: Text(info)),
+                    ],
+                  ),
+                ),
               const SizedBox(height: 16),
               if (future)
                 Text('This day is in the future. You can log it once it happens.', style: theme.textTheme.bodySmall)
@@ -271,7 +281,9 @@ class _DaySheet extends StatelessWidget {
                   children: [
                     for (final m in kMoods)
                       ChoiceChip(
-                        label: Text(m, style: const TextStyle(fontSize: 20)),
+                        showCheckmark: false,
+                        tooltip: m,
+                        label: Icon(kMoodIcons[m], size: 24),
                         selected: log.mood == m,
                         onSelected: (sel) => state.setLog(
                           DayLog(date: day, mood: sel ? m : null, symptoms: log.symptoms, note: log.note),

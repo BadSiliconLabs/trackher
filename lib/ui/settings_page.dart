@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import '../data/store.dart';
 import '../services/notifications.dart';
 import '../state/app_state.dart';
+import 'theme.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -198,7 +199,7 @@ class SettingsPage extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'TrackHer estimates cycles statistically from the dates you enter. It is not medical advice and must not be '
+              '$kAppName estimates cycles statistically from the dates you enter. It is not medical advice and must not be '
               'used as contraception. Every person is different, so talk with her. If her cycles are often shorter than 21 '
               'or longer than 35 days, or very painful, suggest seeing a doctor.',
             ),
@@ -212,13 +213,13 @@ class SettingsPage extends StatelessWidget {
     final dir = await getTemporaryDirectory();
     final now = DateTime.now();
     final f = File(
-      '${dir.path}/trackher-backup-${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}.json',
+      '${dir.path}/tempo-backup-${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}.json',
     );
     await f.writeAsString(state.exportJson());
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(f.path, mimeType: 'application/json')],
-        subject: 'TrackHer backup',
+        subject: '$kAppName backup',
       ),
     );
   }
@@ -234,7 +235,7 @@ class SettingsPage extends StatelessWidget {
         SnackBar(content: Text('Imported ${data.periods.length} periods and ${data.notes.length} notes')),
       );
     } catch (e) {
-      messenger.showSnackBar(const SnackBar(content: Text("That file isn't a valid TrackHer backup")));
+      messenger.showSnackBar(SnackBar(content: Text("That file isn't a valid $kAppName backup")));
     }
   }
 }

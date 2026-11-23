@@ -23,7 +23,7 @@ class TipCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text(tip.category.emoji, style: const TextStyle(fontSize: 22)),
+                Icon(tip.category.icon, size: 22, color: theme.colorScheme.primary),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(tip.title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),

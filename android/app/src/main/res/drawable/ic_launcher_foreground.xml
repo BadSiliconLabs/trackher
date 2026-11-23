@@ -1,10 +1,10 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
-    <!-- heart -->
-    <path android:fillColor="#FFFFFFFF"
-        android:pathData="M54,78 L33,57 C27,51 27,41.5 33,36 C38.5,31 46.5,31.5 51,37 L54,40.5 L57,37 C61.5,31.5 69.5,31 75,36 C81,41.5 81,51 75,57 Z"/>
-    <!-- drop -->
-    <path android:fillColor="#FFB4436C"
-        android:pathData="M54,42 C54,42 46,51 46,56 C46,60.4 49.6,64 54,64 C58.4,64 62,60.4 62,56 C62,51 54,42 54,42 Z"/>
+    <!-- ring -->
+    <path android:fillColor="#00000000" android:strokeColor="#FFE8EEF0" android:strokeWidth="5"
+        android:pathData="M54,36 A18,18 0 1,1 53.99,36 Z"/>
+    <!-- dot on the ring -->
+    <path android:fillColor="#FFB9D3CC"
+        android:pathData="M66.7,41.3 m-5.5,0 a5.5,5.5 0 1,0 11,0 a5.5,5.5 0 1,0 -11,0"/>
 </vector>

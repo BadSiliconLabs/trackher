@@ -40,7 +40,8 @@ class HerNote {
 }
 
 const kSymptoms = ['cramps', 'headache', 'fatigue', 'bloating', 'acne', 'cravings', 'back pain', 'tender breasts'];
-const kMoods = ['😊', '😐', '😢', '😠', '😴'];
+const kMoods = ['happy', 'neutral', 'sad', 'irritable', 'tired'];
+const _legacyMoods = {'😊': 'happy', '😐': 'neutral', '😢': 'sad', '😠': 'irritable', '😴': 'tired'};
 
 class DayLog {
   final DateTime date;
@@ -62,7 +63,7 @@ class DayLog {
   };
   factory DayLog.fromJson(Map<String, dynamic> j) => DayLog(
     date: _p(j['date']),
-    mood: j['mood'],
+    mood: _legacyMoods[j['mood']] ?? j['mood'],
     symptoms: {...(j['symptoms'] as List? ?? []).cast<String>()},
     note: j['note'] ?? '',
   );

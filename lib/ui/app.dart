@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import 'calendar_page.dart';
 import 'forecast_page.dart';
+import 'guide_page.dart';
 import 'home_page.dart';
 import 'notes_page.dart';
 import 'onboarding.dart';
@@ -19,7 +20,7 @@ class TrackHerApp extends StatelessWidget {
     final mode = context.select<AppState, String>((s) => s.settings.themeMode);
     final onboarded = context.select<AppState, bool>((s) => s.settings.onboarded);
     return MaterialApp(
-      title: 'TrackHer',
+      title: kAppName,
       debugShowCheckedModeBanner: false,
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
@@ -77,6 +78,13 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
       appBar: AppBar(
         title: Text(_titles[_index], style: const TextStyle(fontWeight: FontWeight.w700)),
         actions: [
+          IconButton(
+            tooltip: 'Guide',
+            icon: const Icon(Icons.menu_book_outlined),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => GuidePage(focus: context.read<AppState>().forecast?.likelyPhase))),
+          ),
           IconButton(
             tooltip: 'Settings',
             icon: const Icon(Icons.settings_outlined),

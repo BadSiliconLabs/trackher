@@ -47,6 +47,7 @@ void main() {
     expect(r.periods.single.length, 5);
     expect(r.notes.single.phases, {Phase.pms});
     expect(r.logs.values.single.symptoms, {'cramps'});
+    expect(r.logs.values.single.mood, 'tired', reason: 'legacy emoji mood migrated');
     expect(r.tipFeedback['pms-hugs'], 1);
     expect(r.settings.herName, 'Anna');
     expect(r.settings.notifyFertile, isTrue);

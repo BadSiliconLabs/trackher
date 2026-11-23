@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../engine/day.dart';
 import '../engine/phases.dart';
 import '../state/app_state.dart';
+import 'guide_page.dart';
 import 'theme.dart';
 import 'widgets/tip_card.dart';
 
@@ -126,7 +127,7 @@ class _PhaseCard extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white70),
                 ),
                 const Spacer(),
-                Text(phase.emoji, style: const TextStyle(fontSize: 28)),
+                Icon(phase.icon, color: Colors.white, size: 28),
               ],
             ),
             const SizedBox(height: 4),
@@ -136,6 +137,15 @@ class _PhaseCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(phase.blurb, style: const TextStyle(color: Colors.white, height: 1.35)),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                style: TextButton.styleFrom(foregroundColor: Colors.white, padding: EdgeInsets.zero),
+                icon: const Icon(Icons.menu_book_outlined, size: 18),
+                label: const Text('About this phase'),
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => GuidePage(focus: phase))),
+              ),
+            ),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -196,7 +206,7 @@ class _QuickActions extends StatelessWidget {
                       await state.addPeriodStart(today);
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Logged. Forecast updated. Be extra sweet to $name today 💝')),
+                          SnackBar(content: Text('Logged. Forecast updated. Be extra sweet to $name today.')),
                         );
                       }
                     },
@@ -251,7 +261,7 @@ class _NextDays extends StatelessWidget {
                   children: [
                     Text(DateFormat.E().format(d).substring(0, 2), style: theme.textTheme.labelSmall),
                     Text('${d.day}', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-                    Text(ph.emoji, style: const TextStyle(fontSize: 12)),
+                    Icon(ph.icon, size: 14, color: ph.color),
                   ],
                 ),
               );
@@ -320,7 +330,7 @@ class _Empty extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('🗓️', style: theme.textTheme.displayMedium),
+            Icon(Icons.event_note_outlined, size: 56, color: theme.colorScheme.primary),
             const SizedBox(height: 12),
             Text('No dates yet', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),

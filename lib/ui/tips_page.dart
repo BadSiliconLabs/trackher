@@ -43,7 +43,7 @@ class _TipsPageState extends State<TipsPage> {
                 Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: ChoiceChip(
-                    avatar: Text(p.emoji),
+                    avatar: Icon(p.icon, size: 18),
                     label: Text(p == current ? '${p.label} (now)' : p.label),
                     selected: !_showHidden && p == phase,
                     onSelected: (_) => setState(() {
@@ -72,7 +72,8 @@ class _TipsPageState extends State<TipsPage> {
                 Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: FilterChip(
-                    label: Text('${c.emoji} ${c.label}'),
+                    avatar: Icon(c.icon, size: 18),
+                    label: Text(c.label),
                     selected: _cat == c,
                     onSelected: (s) => setState(() => _cat = s ? c : null),
                   ),

@@ -1,4 +1,4 @@
-# TrackHer: Design Doc
+# Tempo (formerly TrackHer): Design Doc
 
 _Status: v1 draft, 2026-11-23_
 
@@ -22,6 +22,14 @@ local-only and quick.**
 > always her. The app says this during onboarding and on the tips screen, and it points out
 > that it works best when she knows about it and helps fill it in.
 > It is **not** contraception and **not** medical advice. The fertile window is informational only.
+
+## 1b. Discretion (v0.2)
+- The app is called **Tempo**, with package id `com.badsiliconlabs.tempo`. The icon is an abstract ring with a dot on a slate background.
+- The palette is muted slate/sage/sand, with no pinks or reds. Material icons replace all emojis.
+- Notification text never mentions periods, PMS or fertility ("Heads-up for about 2 days from now").
+- A **Guide** (book icon in the top bar, or "About this phase" on the Today card) explains each phase:
+  what's happening, how she may feel, how to help, and what to avoid. It also covers what's normal, when to
+  suggest a doctor, contraception, and how the forecast works.
 
 ## 2. Decisions made
 

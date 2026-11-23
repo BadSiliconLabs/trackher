@@ -97,7 +97,7 @@ class _ForecastPageState extends State<ForecastPage> {
                       final (lo95, hi95) = up.interval(0.95);
                       return ListTile(
                         dense: true,
-                        leading: Text(Phase.period.emoji, style: const TextStyle(fontSize: 20)),
+                        leading: Icon(Phase.period.icon, color: Phase.period.color),
                         title: Text(
                           DateFormat.yMMMEd().format(up.modeDate),
                           style: const TextStyle(fontWeight: FontWeight.w600),

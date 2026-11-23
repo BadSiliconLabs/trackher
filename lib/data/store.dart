@@ -41,7 +41,7 @@ class Store {
   static AppData decode(String s) {
     final j = jsonDecode(s);
     if (j is! Map<String, dynamic> || !j.containsKey('periods')) {
-      throw const FormatException('Not a TrackHer backup');
+      throw const FormatException('Not a Tempo backup');
     }
     return AppData.fromJson(j);
   }
