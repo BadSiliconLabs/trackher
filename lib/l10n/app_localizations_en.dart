@@ -708,4 +708,100 @@ class LEn extends L {
 
   @override
   String get gAvoid => 'Better avoid';
+
+  @override
+  String get comingUp => 'Coming up';
+
+  @override
+  String get evPms => 'PMS window starts';
+
+  @override
+  String get evPeriod => 'Period expected';
+
+  @override
+  String get evFertile => 'Fertile window starts';
+
+  @override
+  String get evOvulation => 'Estimated ovulation';
+
+  @override
+  String get relToday => 'today';
+
+  @override
+  String get relTomorrow => 'tomorrow';
+
+  @override
+  String relInDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'in $n days',
+      one: 'in 1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dayOfCycle(int day, int len) {
+    return 'Day $day of ~$len';
+  }
+
+  @override
+  String get otherDay => 'Started on…';
+
+  @override
+  String get whenDidItStart => 'When did it start?';
+
+  @override
+  String loggedStartOn(String date) {
+    return 'Logged a start on $date.';
+  }
+
+  @override
+  String get anotherTip => 'Another tip';
+
+  @override
+  String get quickIdeas => 'Quick ideas';
+
+  @override
+  String get sugSpace => 'Wants space';
+
+  @override
+  String get sugHugs => 'Loves hugs';
+
+  @override
+  String get sugSweet => 'Craves sweets';
+
+  @override
+  String get sugSalty => 'Craves salty food';
+
+  @override
+  String get sugHeat => 'A heat pad helps';
+
+  @override
+  String get sugComfortFood => 'Comfort food: ';
+
+  @override
+  String get sugFlowers => 'Favourite flowers: ';
+
+  @override
+  String get privacy => 'Privacy';
+
+  @override
+  String get appLock => 'App lock';
+
+  @override
+  String get appLockSub =>
+      'Ask for fingerprint, face or PIN when opening. Also hides the app\'s content in recent apps.';
+
+  @override
+  String get appLockUnavailable => 'Set up a screen lock on this phone first.';
+
+  @override
+  String get unlock => 'Unlock';
+
+  @override
+  String unlockReason(String app) {
+    return 'Unlock $app';
+  }
 }

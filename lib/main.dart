@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'data/store.dart';
 import 'engine/tips_engine.dart';
+import 'services/app_lock.dart';
 import 'services/notifications.dart';
 import 'state/app_state.dart';
 import 'ui/app.dart';
@@ -22,11 +23,14 @@ Future<void> main() async {
   }
   final state = AppState(store: Store(), tipsByLang: tips, reschedule: notifications.reschedule);
   await state.load();
+  final lock = AppLockService();
+  if (state.settings.appLock) await lock.setSecure(true);
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: state),
         Provider.value(value: notifications),
+        Provider.value(value: lock),
       ],
       child: const TrackHerApp(),
     ),

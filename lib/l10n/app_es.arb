@@ -1,6 +1,5 @@
 {
   "@@locale": "es",
-
   "navToday": "Hoy",
   "navCalendar": "Calendario",
   "navForecast": "Previsión",
@@ -9,10 +8,8 @@
   "titleNotes": "Notas sobre ella",
   "guide": "Guía",
   "settings": "Ajustes",
-
   "herDefault": "ella",
   "herDefaultCap": "Ella",
-
   "phasePeriod": "Menstruación",
   "phaseFollicular": "Fase folicular",
   "phaseFertile": "Ventana fértil",
@@ -25,7 +22,6 @@
   "blurbOvulation": "Día estimado de ovulación. Algunas personas notan una punzada o un dolor leve en un lado.",
   "blurbLuteal": "Sube la progesterona. Puede estar más cansada o querer más calma y mimos.",
   "blurbPms": "Los días antes de la regla. Son comunes los cambios de humor, los antojos, la hinchazón y la irritabilidad. Sé aún más amable.",
-
   "catFood": "Comida",
   "catComfort": "Confort",
   "catAffection": "Cariño",
@@ -33,7 +29,6 @@
   "catPlans": "Planes",
   "catWords": "Palabras",
   "catPractical": "Práctico",
-
   "moodHappy": "Feliz",
   "moodNeutral": "Normal",
   "moodSad": "Triste",
@@ -47,13 +42,11 @@
   "symCravings": "antojos",
   "symBackPain": "dolor de espalda",
   "symTenderBreasts": "pechos sensibles",
-
   "next": "Siguiente",
   "cancel": "Cancelar",
   "save": "Guardar",
   "delete": "Eliminar",
   "undo": "Deshacer",
-
   "obTagline": "Sabe en qué fase de su ciclo está y recibe ideas prácticas para apoyarla: cuándo llevarle algo de picar, cuándo darle espacio, cuándo planear una cita especial.",
   "obRespect": "Cada persona es diferente, y ella es la experta en sí misma. Funciona mejor si ella lo sabe y te ayuda a rellenarlo.",
   "obPrivacy": "Todo se queda en este teléfono. Sin cuenta, sin nube. No es consejo médico ni un anticonceptivo.",
@@ -66,7 +59,6 @@
   "obPickOne": "Elige al menos una fecha",
   "obDone": "{count, plural, =1{Listo (1 fecha)} other{Listo ({count} fechas)}}",
   "obSkip": "Aún no lo sé, saltar",
-
   "bannerStale": "Hace tiempo que no registras una regla, así que la previsión supone que los ciclos han continuado. Registra el último inicio para más precisión.",
   "bannerLog": "Registrar",
   "bannerSuspicious": "Algunos inicios registrados están a menos de 15 días y se han ignorado (¿manchado o un duplicado?).",
@@ -90,7 +82,6 @@
   "moreTips": "Más consejos",
   "emptyTitle": "Aún no hay fechas",
   "emptyBody": "Registra el primer día de una de sus reglas (en la pestaña Calendario, o toca abajo si empezó hoy) y aparecerá la previsión.",
-
   "calHint": "Toca un día para registrar o editar la regla, el ánimo o los síntomas.",
   "loggedPeriods": "Reglas registradas ({n})",
   "noPeriodsYet": "Todavía ninguna. Toca el día en que empezó su última regla.",
@@ -108,7 +99,6 @@
   "endedOn": "Terminó el {date} ({days})",
   "howWasShe": "¿Cómo estaba? (opcional)",
   "note": "Nota",
-
   "needOneDate": "Registra al menos un inicio de regla para ver la previsión.",
   "nextStartProbability": "Probabilidad del próximo inicio",
   "forecastSummary": "Lo más probable: {date} ({pct}%). 80% de probabilidad entre {from} y {to}.",
@@ -136,7 +126,6 @@
   "regRegular": "regular",
   "regSomewhatIrregular": "algo irregular",
   "regIrregular": "irregular",
-
   "phaseNow": "{phase} (ahora)",
   "all": "Todos",
   "tipsDisclaimer": "Son ideas, no reglas. Lo que ella te diga siempre gana.",
@@ -147,7 +136,6 @@
   "helpful": "Útil",
   "hideTip": "No es para nosotros (ocultar)",
   "tipHidden": "Consejo oculto",
-
   "notesIntro": "Cosas que te ha contado o que has aprendido: qué ayuda, qué no, su comida reconfortante favorita. Asocia una nota a fases y aparecerá en la pantalla Hoy en el momento justo.",
   "examples": "Ejemplos",
   "examplesBody": "• Menstruación: el primer día no quiere que la toquen, pero le encanta la bolsa de agua caliente\n• Síndrome premenstrual: se le antojan patatas fritas saladas, NO dulces\n• Siempre: sus flores favoritas son las peonías\n• Fase folicular: le encanta salir de excursión",
@@ -157,7 +145,6 @@
   "editNote": "Editar nota",
   "noteHint": "p. ej. El primer día quiere espacio",
   "showDuring": "Mostrar durante (ninguna = siempre)",
-
   "aboutHer": "Sobre ella",
   "name": "Nombre",
   "notSet": "Sin definir",
@@ -194,17 +181,42 @@
   "backupSubject": "Copia de seguridad de {app}",
   "imported": "Importadas {periods} reglas y {notes} notas",
   "invalidBackup": "Ese archivo no es una copia de seguridad válida de {app}",
-
   "notifHeadsUp": "{n, plural, =1{Aviso para dentro de 1 día aprox. (±{range}). Abre la app para ver los detalles.} other{Aviso para dentro de {n} días aprox. (±{range}). Abre la app para ver los detalles.}}",
   "notifSensitive": "Probablemente empieza una semana delicada. Un poco más de paciencia y amabilidad ayudan mucho.",
   "notifWindow": "Una nueva ventana empieza más o menos ahora. Abre para ver los detalles.",
   "notifTip": "Consejo: {title}",
-
   "guidePhases": "Las fases",
   "typicalCycle": "Un ciclo típico de 28 días",
   "dayN": "Día {n}",
   "gWhat": "Qué está pasando",
   "gFeel": "Cómo puede sentirse",
   "gHelp": "Cómo ayudar",
-  "gAvoid": "Mejor evitar"
+  "gAvoid": "Mejor evitar",
+  "comingUp": "Próximamente",
+  "evPms": "Empieza la fase premenstrual",
+  "evPeriod": "Regla prevista",
+  "evFertile": "Empieza la ventana fértil",
+  "evOvulation": "Ovulación estimada",
+  "relToday": "hoy",
+  "relTomorrow": "mañana",
+  "relInDays": "{n, plural, =1{en 1 día} other{en {n} días}}",
+  "dayOfCycle": "Día {day} de ~{len}",
+  "otherDay": "Empezó el…",
+  "whenDidItStart": "¿Cuándo empezó?",
+  "loggedStartOn": "Inicio registrado el {date}.",
+  "anotherTip": "Otro consejo",
+  "quickIdeas": "Ideas rápidas",
+  "sugSpace": "Quiere espacio",
+  "sugHugs": "Le encantan los abrazos",
+  "sugSweet": "Se le antojan dulces",
+  "sugSalty": "Se le antoja algo salado",
+  "sugHeat": "La bolsa de agua caliente ayuda",
+  "sugComfortFood": "Comida reconfortante: ",
+  "sugFlowers": "Flores favoritas: ",
+  "privacy": "Privacidad",
+  "appLock": "Bloqueo de la app",
+  "appLockSub": "Pide huella, cara o PIN al abrirla. También oculta el contenido de la app en las apps recientes.",
+  "appLockUnavailable": "Primero configura un bloqueo de pantalla en este teléfono.",
+  "unlock": "Desbloquear",
+  "unlockReason": "Desbloquear {app}"
 }

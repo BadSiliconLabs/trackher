@@ -1250,6 +1250,168 @@ abstract class L {
   /// In en, this message translates to:
   /// **'Better avoid'**
   String get gAvoid;
+
+  /// No description provided for @comingUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming up'**
+  String get comingUp;
+
+  /// No description provided for @evPms.
+  ///
+  /// In en, this message translates to:
+  /// **'PMS window starts'**
+  String get evPms;
+
+  /// No description provided for @evPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Period expected'**
+  String get evPeriod;
+
+  /// No description provided for @evFertile.
+  ///
+  /// In en, this message translates to:
+  /// **'Fertile window starts'**
+  String get evFertile;
+
+  /// No description provided for @evOvulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated ovulation'**
+  String get evOvulation;
+
+  /// No description provided for @relToday.
+  ///
+  /// In en, this message translates to:
+  /// **'today'**
+  String get relToday;
+
+  /// No description provided for @relTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'tomorrow'**
+  String get relTomorrow;
+
+  /// No description provided for @relInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{n, plural, =1{in 1 day} other{in {n} days}}'**
+  String relInDays(int n);
+
+  /// No description provided for @dayOfCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Day {day} of ~{len}'**
+  String dayOfCycle(int day, int len);
+
+  /// No description provided for @otherDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Started on…'**
+  String get otherDay;
+
+  /// No description provided for @whenDidItStart.
+  ///
+  /// In en, this message translates to:
+  /// **'When did it start?'**
+  String get whenDidItStart;
+
+  /// No description provided for @loggedStartOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged a start on {date}.'**
+  String loggedStartOn(String date);
+
+  /// No description provided for @anotherTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Another tip'**
+  String get anotherTip;
+
+  /// No description provided for @quickIdeas.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick ideas'**
+  String get quickIdeas;
+
+  /// No description provided for @sugSpace.
+  ///
+  /// In en, this message translates to:
+  /// **'Wants space'**
+  String get sugSpace;
+
+  /// No description provided for @sugHugs.
+  ///
+  /// In en, this message translates to:
+  /// **'Loves hugs'**
+  String get sugHugs;
+
+  /// No description provided for @sugSweet.
+  ///
+  /// In en, this message translates to:
+  /// **'Craves sweets'**
+  String get sugSweet;
+
+  /// No description provided for @sugSalty.
+  ///
+  /// In en, this message translates to:
+  /// **'Craves salty food'**
+  String get sugSalty;
+
+  /// No description provided for @sugHeat.
+  ///
+  /// In en, this message translates to:
+  /// **'A heat pad helps'**
+  String get sugHeat;
+
+  /// No description provided for @sugComfortFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Comfort food: '**
+  String get sugComfortFood;
+
+  /// No description provided for @sugFlowers.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourite flowers: '**
+  String get sugFlowers;
+
+  /// No description provided for @privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get privacy;
+
+  /// No description provided for @appLock.
+  ///
+  /// In en, this message translates to:
+  /// **'App lock'**
+  String get appLock;
+
+  /// No description provided for @appLockSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask for fingerprint, face or PIN when opening. Also hides the app\'s content in recent apps.'**
+  String get appLockSub;
+
+  /// No description provided for @appLockUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up a screen lock on this phone first.'**
+  String get appLockUnavailable;
+
+  /// No description provided for @unlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get unlock;
+
+  /// No description provided for @unlockReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock {app}'**
+  String unlockReason(String app);
 }
 
 class _LDelegate extends LocalizationsDelegate<L> {

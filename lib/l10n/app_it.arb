@@ -1,6 +1,5 @@
 {
   "@@locale": "it",
-
   "navToday": "Oggi",
   "navCalendar": "Calendario",
   "navForecast": "Previsioni",
@@ -9,10 +8,8 @@
   "titleNotes": "Note su di lei",
   "guide": "Guida",
   "settings": "Impostazioni",
-
   "herDefault": "lei",
   "herDefaultCap": "Lei",
-
   "phasePeriod": "Mestruazioni",
   "phaseFollicular": "Fase follicolare",
   "phaseFertile": "Finestra fertile",
@@ -25,7 +22,6 @@
   "blurbOvulation": "Giorno stimato dell'ovulazione. Alcune persone sentono una fitta o un lieve dolore su un lato.",
   "blurbLuteal": "Il progesterone sale. Potrebbe essere più stanca o desiderare più calma e coccole.",
   "blurbPms": "I giorni prima del ciclo. Sbalzi d'umore, voglie, gonfiore e irritabilità sono comuni. Sii ancora più gentile.",
-
   "catFood": "Cibo",
   "catComfort": "Comfort",
   "catAffection": "Affetto",
@@ -33,7 +29,6 @@
   "catPlans": "Programmi",
   "catWords": "Parole",
   "catPractical": "Pratico",
-
   "moodHappy": "Felice",
   "moodNeutral": "Neutra",
   "moodSad": "Triste",
@@ -47,13 +42,11 @@
   "symCravings": "voglie",
   "symBackPain": "mal di schiena",
   "symTenderBreasts": "seno dolente",
-
   "next": "Avanti",
   "cancel": "Annulla",
   "save": "Salva",
   "delete": "Elimina",
   "undo": "Annulla",
-
   "obTagline": "Sai in che fase del ciclo si trova e ricevi idee pratiche per starle vicino: quando portarle uno snack, quando lasciarle spazio, quando organizzare un appuntamento speciale.",
   "obRespect": "Ogni persona è diversa, e lei è l'esperta di sé stessa. Funziona meglio se lei lo sa e ti aiuta a compilarlo.",
   "obPrivacy": "Tutto resta su questo telefono. Nessun account, nessun cloud. Non è un consiglio medico né un contraccettivo.",
@@ -66,7 +59,6 @@
   "obPickOne": "Scegli almeno una data",
   "obDone": "{count, plural, =1{Fatto (1 data)} other{Fatto ({count} date)}}",
   "obSkip": "Non lo so ancora, salta",
-
   "bannerStale": "Non registri un ciclo da un po', quindi la previsione presume che i cicli siano continuati. Registra l'ultimo inizio per una maggiore precisione.",
   "bannerLog": "Registra",
   "bannerSuspicious": "Alcuni inizi registrati distano meno di 15 giorni e sono stati ignorati (perdite o un doppione?).",
@@ -90,7 +82,6 @@
   "moreTips": "Altri consigli",
   "emptyTitle": "Ancora nessuna data",
   "emptyBody": "Registra il primo giorno di uno dei suoi cicli (nella scheda Calendario, oppure tocca qui sotto se è iniziato oggi) e comparirà la previsione.",
-
   "calHint": "Tocca un giorno per registrare o modificare ciclo, umore o sintomi.",
   "loggedPeriods": "Cicli registrati ({n})",
   "noPeriodsYet": "Ancora nessuno. Tocca il giorno in cui è iniziato il suo ultimo ciclo.",
@@ -108,7 +99,6 @@
   "endedOn": "Finito il {date} ({days})",
   "howWasShe": "Come stava? (facoltativo)",
   "note": "Nota",
-
   "needOneDate": "Registra almeno un inizio di ciclo per vedere la previsione.",
   "nextStartProbability": "Probabilità del prossimo inizio",
   "forecastSummary": "Più probabile il {date} ({pct}%). 80% di probabilità tra il {from} e il {to}.",
@@ -136,7 +126,6 @@
   "regRegular": "regolare",
   "regSomewhatIrregular": "abbastanza irregolare",
   "regIrregular": "irregolare",
-
   "phaseNow": "{phase} (ora)",
   "all": "Tutti",
   "tipsDisclaimer": "Sono idee, non regole. Quello che ti dice lei vale sempre di più.",
@@ -147,7 +136,6 @@
   "helpful": "Utile",
   "hideTip": "Non fa per noi (nascondi)",
   "tipHidden": "Consiglio nascosto",
-
   "notesIntro": "Cose che ti ha detto o che hai imparato: cosa aiuta, cosa no, il suo cibo consolatorio preferito. Associa una nota alle fasi e comparirà nella schermata Oggi al momento giusto.",
   "examples": "Esempi",
   "examplesBody": "• Mestruazioni: il primo giorno non vuole essere toccata, ma adora la borsa dell'acqua calda\n• Sindrome premestruale: ha voglia di patatine salate, NON di dolci\n• Sempre: i suoi fiori preferiti sono le peonie\n• Fase follicolare: adora le escursioni insieme",
@@ -157,7 +145,6 @@
   "editNote": "Modifica nota",
   "noteHint": "es. Il primo giorno vuole stare per conto suo",
   "showDuring": "Mostra durante (nessuna = sempre)",
-
   "aboutHer": "Su di lei",
   "name": "Nome",
   "notSet": "Non impostato",
@@ -194,17 +181,42 @@
   "backupSubject": "Backup di {app}",
   "imported": "Importati {periods} cicli e {notes} note",
   "invalidBackup": "Questo file non è un backup valido di {app}",
-
   "notifHeadsUp": "{n, plural, =1{Promemoria per tra circa 1 giorno (±{range}). Apri l'app per i dettagli.} other{Promemoria per tra circa {n} giorni (±{range}). Apri l'app per i dettagli.}}",
   "notifSensitive": "Probabilmente inizia una settimana delicata. Un po' di pazienza e gentilezza in più fanno molto.",
   "notifWindow": "Una nuova finestra inizia più o meno ora. Apri per i dettagli.",
   "notifTip": "Consiglio: {title}",
-
   "guidePhases": "Le fasi",
   "typicalCycle": "Un ciclo tipico di 28 giorni",
   "dayN": "Giorno {n}",
   "gWhat": "Cosa succede",
   "gFeel": "Come potrebbe sentirsi",
   "gHelp": "Come aiutarla",
-  "gAvoid": "Meglio evitare"
+  "gAvoid": "Meglio evitare",
+  "comingUp": "In arrivo",
+  "evPms": "Inizia la fase premestruale",
+  "evPeriod": "Ciclo previsto",
+  "evFertile": "Inizia la finestra fertile",
+  "evOvulation": "Ovulazione stimata",
+  "relToday": "oggi",
+  "relTomorrow": "domani",
+  "relInDays": "{n, plural, =1{tra 1 giorno} other{tra {n} giorni}}",
+  "dayOfCycle": "Giorno {day} di ~{len}",
+  "otherDay": "Iniziato il…",
+  "whenDidItStart": "Quando è iniziato?",
+  "loggedStartOn": "Inizio registrato il {date}.",
+  "anotherTip": "Un altro consiglio",
+  "quickIdeas": "Idee rapide",
+  "sugSpace": "Vuole spazio",
+  "sugHugs": "Adora gli abbracci",
+  "sugSweet": "Ha voglia di dolci",
+  "sugSalty": "Ha voglia di salato",
+  "sugHeat": "La borsa dell'acqua calda aiuta",
+  "sugComfortFood": "Cibo consolatorio: ",
+  "sugFlowers": "Fiori preferiti: ",
+  "privacy": "Privacy",
+  "appLock": "Blocco app",
+  "appLockSub": "Chiede impronta, volto o PIN all'apertura. Nasconde anche il contenuto dell'app tra le app recenti.",
+  "appLockUnavailable": "Prima imposta un blocco schermo su questo telefono.",
+  "unlock": "Sblocca",
+  "unlockReason": "Sblocca {app}"
 }

@@ -8,6 +8,7 @@ import 'forecast_page.dart';
 import 'guide_page.dart';
 import 'home_page.dart';
 import 'l10n.dart';
+import 'lock_gate.dart';
 import 'notes_page.dart';
 import 'onboarding.dart';
 import 'settings_page.dart';
@@ -36,7 +37,7 @@ class TrackHerApp extends StatelessWidget {
         'dark' => ThemeMode.dark,
         _ => ThemeMode.system,
       },
-      home: onboarded ? const Shell() : const OnboardingPage(),
+      home: onboarded ? const LockGate(child: Shell()) : const OnboardingPage(),
     );
   }
 }

@@ -8,6 +8,18 @@ import 'predictor.dart';
 
 enum Phase { period, follicular, fertile, ovulation, luteal, pms }
 
+enum CycleEventKind { pms, period, fertile, ovulation }
+
+/// A predicted upcoming moment in the cycle.
+class CycleEvent {
+  final CycleEventKind kind;
+  final int day;
+
+  /// Half-width of the 80% range, in days (0 when not meaningful).
+  final int spread;
+  const CycleEvent(this.kind, this.day, this.spread);
+}
+
 /// Phase for a cycle day [c] (0-based) of a cycle of length [len].
 Phase phaseForCycleDay(int c, int len, int periodLength) {
   if (c < periodLength) return Phase.period;
@@ -95,6 +107,33 @@ class Forecast {
     final c = ((day - lastStartDay) % avg + avg) % avg;
     return phaseForCycleDay(c, avg, periodLength);
   }
+
+  /// Next predicted events from today, soonest first.
+  List<CycleEvent> upcomingEvents({int horizonDays = 60, int max = 4}) {
+    final out = <CycleEvent>[];
+    for (final f in upcoming) {
+      final (lo, hi) = f.interval(0.8);
+      final spread = ((hi - lo) / 2).ceil();
+      out
+        ..add(CycleEvent(CycleEventKind.fertile, f.mode - 19, spread))
+        ..add(CycleEvent(CycleEventKind.ovulation, f.mode - 14, spread))
+        ..add(CycleEvent(CycleEventKind.pms, f.mode - 6, spread))
+        ..add(CycleEvent(CycleEventKind.period, f.mode, spread));
+    }
+    final list = out.where((e) => e.day >= todayDay && e.day - todayDay <= horizonDays).toList()
+      ..sort((a, b) => a.day.compareTo(b.day));
+    return list.take(max).toList();
+  }
+
+  /// Progress through the current cycle in [0, 1] (expected length = last start → next mode).
+  double get cycleProgress {
+    final len = next.mode - lastStartDay;
+    if (len <= 0) return 1;
+    return ((todayDay - lastStartDay) / len).clamp(0.0, 1.0);
+  }
+
+  /// Expected length of the current cycle in days.
+  int get currentCycleLength => (next.mode - lastStartDay).clamp(1, 120);
 
   static Forecast? compute(
     List<DateTime> starts, {

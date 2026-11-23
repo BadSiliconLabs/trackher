@@ -713,4 +713,101 @@ class LIt extends L {
 
   @override
   String get gAvoid => 'Meglio evitare';
+
+  @override
+  String get comingUp => 'In arrivo';
+
+  @override
+  String get evPms => 'Inizia la fase premestruale';
+
+  @override
+  String get evPeriod => 'Ciclo previsto';
+
+  @override
+  String get evFertile => 'Inizia la finestra fertile';
+
+  @override
+  String get evOvulation => 'Ovulazione stimata';
+
+  @override
+  String get relToday => 'oggi';
+
+  @override
+  String get relTomorrow => 'domani';
+
+  @override
+  String relInDays(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'tra $n giorni',
+      one: 'tra 1 giorno',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dayOfCycle(int day, int len) {
+    return 'Giorno $day di ~$len';
+  }
+
+  @override
+  String get otherDay => 'Iniziato il…';
+
+  @override
+  String get whenDidItStart => 'Quando è iniziato?';
+
+  @override
+  String loggedStartOn(String date) {
+    return 'Inizio registrato il $date.';
+  }
+
+  @override
+  String get anotherTip => 'Un altro consiglio';
+
+  @override
+  String get quickIdeas => 'Idee rapide';
+
+  @override
+  String get sugSpace => 'Vuole spazio';
+
+  @override
+  String get sugHugs => 'Adora gli abbracci';
+
+  @override
+  String get sugSweet => 'Ha voglia di dolci';
+
+  @override
+  String get sugSalty => 'Ha voglia di salato';
+
+  @override
+  String get sugHeat => 'La borsa dell\'acqua calda aiuta';
+
+  @override
+  String get sugComfortFood => 'Cibo consolatorio: ';
+
+  @override
+  String get sugFlowers => 'Fiori preferiti: ';
+
+  @override
+  String get privacy => 'Privacy';
+
+  @override
+  String get appLock => 'Blocco app';
+
+  @override
+  String get appLockSub =>
+      'Chiede impronta, volto o PIN all\'apertura. Nasconde anche il contenuto dell\'app tra le app recenti.';
+
+  @override
+  String get appLockUnavailable =>
+      'Prima imposta un blocco schermo su questo telefono.';
+
+  @override
+  String get unlock => 'Sblocca';
+
+  @override
+  String unlockReason(String app) {
+    return 'Sblocca $app';
+  }
 }

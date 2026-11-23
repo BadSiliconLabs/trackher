@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../data/store.dart';
+import '../services/app_lock.dart';
 import '../services/notifications.dart';
 import '../state/app_state.dart';
 import 'l10n.dart';
@@ -147,6 +148,14 @@ class SettingsPage extends StatelessWidget {
               }
             },
           ),
+          header(l.privacy),
+          SwitchListTile(
+            secondary: const Icon(Icons.lock_outline),
+            title: Text(l.appLock),
+            subtitle: Text(l.appLockSub),
+            value: s.appLock,
+            onChanged: (v) => _toggleLock(context, state, v),
+          ),
           header(l.appearance),
           ListTile(
             leading: const Icon(Icons.language),
@@ -212,6 +221,20 @@ class SettingsPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _toggleLock(BuildContext context, AppState state, bool on) async {
+    final lock = context.read<AppLockService>();
+    final messenger = ScaffoldMessenger.of(context);
+    final l = context.l;
+    if (on && !await lock.available()) {
+      messenger.showSnackBar(SnackBar(content: Text(l.appLockUnavailable)));
+      return;
+    }
+    // Confirm with the device lock both to enable (proves it works) and to disable.
+    if (!await lock.authenticate(l.unlockReason(kAppName))) return;
+    await state.updateSettings((s) => s.appLock = on);
+    await lock.setSecure(on);
   }
 
   Future<void> _export(BuildContext context, AppState state) async {

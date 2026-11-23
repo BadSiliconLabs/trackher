@@ -183,6 +183,13 @@ class AppState extends ChangeNotifier {
     return tips.dailyTip(day, phase, feedback: data.tipFeedback);
   }
 
+  /// Today's tip and alternatives (for the "another tip" button).
+  List<Tip> tipsForDay(int day) {
+    final f = forecast;
+    final phase = f == null ? Phase.follicular : f.phaseOn(day);
+    return tips.dailyTips(day, phase, feedback: data.tipFeedback);
+  }
+
   // ---- Settings / data ----
   Future<void> updateSettings(void Function(Settings s) change) async {
     change(data.settings);

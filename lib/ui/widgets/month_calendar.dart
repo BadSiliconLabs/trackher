@@ -2,6 +2,7 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:material_ui/material_ui.dart';
 
 import '../../engine/day.dart';
+import '../l10n.dart';
 
 typedef DayCellBuilder = Widget Function(BuildContext context, DateTime day, bool inMonth);
 
@@ -57,19 +58,37 @@ class _MonthCalendarState extends State<MonthCalendar> {
         Row(
           children: [
             IconButton(
-              tooltip: 'Previous month',
+              tooltip: MaterialLocalizations.of(context).previousMonthTooltip,
               icon: const Icon(Icons.chevron_left),
               onPressed: () => _ctrl.previousPage(duration: const Duration(milliseconds: 250), curve: Curves.easeOut),
             ),
             Expanded(
-              child: Text(
-                DateFormat.yMMMM().format(month),
-                textAlign: TextAlign.center,
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text(
+                      _capitalize(DateFormat.yMMMM().format(month)),
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  if (_page != _origin)
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      tooltip: context.l.navToday,
+                      icon: const Icon(Icons.today_outlined, size: 20),
+                      onPressed: () => _ctrl.animateToPage(
+                        _origin,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                      ),
+                    ),
+                ],
               ),
             ),
             IconButton(
-              tooltip: 'Next month',
+              tooltip: MaterialLocalizations.of(context).nextMonthTooltip,
               icon: const Icon(Icons.chevron_right),
               onPressed: max != null && _page >= max
                   ? null
@@ -163,3 +182,5 @@ class _MonthGrid extends StatelessWidget {
     );
   }
 }
+
+String _capitalize(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);

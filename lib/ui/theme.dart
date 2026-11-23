@@ -59,6 +59,16 @@ extension TipCategoryStyle on TipCategory {
   };
 }
 
+extension CycleEventStyle on CycleEventKind {
+  /// The phase whose colour and icon represent this event.
+  Phase get phase => switch (this) {
+    CycleEventKind.pms => Phase.pms,
+    CycleEventKind.period => Phase.period,
+    CycleEventKind.fertile => Phase.fertile,
+    CycleEventKind.ovulation => Phase.ovulation,
+  };
+}
+
 /// Mood keys stored in day logs → icons.
 const kMoodIcons = <String, IconData>{
   'happy': Icons.sentiment_satisfied_alt_outlined,

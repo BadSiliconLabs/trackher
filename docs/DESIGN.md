@@ -39,6 +39,15 @@ local-only and quick.**
 - Notifications, dates, month names and decimal separators all follow the selected language.
 - Adding a language means one ARB file, one tips JSON, one guide file, and an entry in `AppState.supportedLanguages`.
 
+## 1d. Ease of use (v0.4)
+- **Today**: a cycle progress bar coloured by phase, a "Coming up" timeline (PMS, period, fertile window and
+  ovulation with relative dates), one-tap "Period started today" plus "Started on…" for past dates
+  (both with Undo), tappable day chips, and an "Another tip" button that rotates without repeats.
+- **Notes**: one-tap suggestions that fill in the text and pre-select the right phases.
+- **Privacy**: an optional app lock (fingerprint, face or PIN via `local_auth`) at launch and after 30 s in the
+  background. While it's on, `FLAG_SECURE` hides the content in recent apps.
+- **Calendar**: a jump-to-today button, localized month titles and tooltips.
+
 ## 2. Decisions made
 
 | Topic | Decision |

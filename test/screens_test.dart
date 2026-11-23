@@ -10,6 +10,7 @@ import 'package:trackher/data/store.dart';
 import 'package:trackher/engine/phases.dart';
 import 'package:trackher/engine/tips_engine.dart';
 import 'package:trackher/model/models.dart';
+import 'package:trackher/services/app_lock.dart';
 import 'package:trackher/services/notifications.dart';
 import 'package:trackher/state/app_state.dart';
 import 'package:trackher/ui/app.dart';
@@ -56,6 +57,7 @@ void main() {
     providers: [
       ChangeNotifierProvider.value(value: s),
       Provider.value(value: NotificationService()),
+      Provider.value(value: AppLockService()),
     ],
     child: const TrackHerApp(),
   );
@@ -112,6 +114,34 @@ void main() {
     await t.tap(find.byTooltip('Guía'));
     await t.pumpAndSettle();
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/es_guide.png'));
+  });
+
+  testWidgets('screen note editor it', (t) async {
+    t.view.physicalSize = const Size(1080, 2340);
+    t.view.devicePixelRatio = 2.75;
+    final s = await t.runAsync(() => makeState(true, lang: 'it'));
+    await t.pumpWidget(wrap(s!));
+    await t.pumpAndSettle();
+    await t.tap(find.byType(NavigationDestination).at(4));
+    await t.pumpAndSettle();
+    await t.tap(find.byType(FloatingActionButton));
+    await t.pumpAndSettle();
+    await t.tap(find.text('Ha voglia di salato'));
+    await t.pumpAndSettle();
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/it_note_editor.png'));
+  });
+
+  testWidgets('screen settings en', (t) async {
+    t.view.physicalSize = const Size(1080, 2340);
+    t.view.devicePixelRatio = 2.75;
+    final s = await t.runAsync(() => makeState(true));
+    await t.pumpWidget(wrap(s!));
+    await t.pumpAndSettle();
+    await t.tap(find.byTooltip('Settings'));
+    await t.pumpAndSettle();
+    await t.drag(find.byType(ListView).last, const Offset(0, -1100));
+    await t.pumpAndSettle();
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/settings.png'));
   });
 
   testWidgets('screen onboarding', (t) async {

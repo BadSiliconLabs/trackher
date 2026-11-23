@@ -117,70 +117,101 @@ Future<void> editNote(BuildContext context, HerNote? existing) async {
     builder: (ctx) => StatefulBuilder(
       builder: (ctx, setS) => Padding(
         padding: EdgeInsets.fromLTRB(20, 0, 20, 20 + MediaQuery.of(ctx).viewInsets.bottom),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              existing == null ? ctx.l.newNote : ctx.l.editNote,
-              style: Theme.of(ctx).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: text,
-              autofocus: existing == null,
-              maxLines: 3,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(border: const OutlineInputBorder(), hintText: ctx.l.noteHint),
-            ),
-            const SizedBox(height: 12),
-            Text(ctx.l.showDuring),
-            const SizedBox(height: 6),
-            Wrap(
-              spacing: 6,
-              runSpacing: 4,
-              children: [
-                for (final p in selectable)
-                  FilterChip(
-                    avatar: Icon(p.icon, size: 18),
-                    label: Text(ctx.l.phase(p)),
-                    selected: phases.contains(p),
-                    onSelected: (s) => setS(() => s ? phases.add(p) : phases.remove(p)),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                if (existing != null)
-                  TextButton.icon(
-                    icon: const Icon(Icons.delete_outline),
-                    label: Text(ctx.l.delete),
-                    onPressed: () {
-                      state.deleteNote(existing.id);
-                      Navigator.pop(ctx);
-                    },
-                  ),
-                const Spacer(),
-                FilledButton(
-                  onPressed: () {
-                    if (text.text.trim().isEmpty) return;
-                    // Fertile also covers ovulation day.
-                    final ph = {...phases, if (phases.contains(Phase.fertile)) Phase.ovulation};
-                    state.upsertNote(
-                      HerNote(
-                        id: existing?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
-                        text: text.text.trim(),
-                        phases: ph,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                existing == null ? ctx.l.newNote : ctx.l.editNote,
+                style: Theme.of(ctx).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              if (existing == null) ...[
+                const SizedBox(height: 8),
+                Text(ctx.l.quickIdeas, style: Theme.of(ctx).textTheme.labelLarge),
+                const SizedBox(height: 6),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: [
+                    for (final (label, ph) in [
+                      (ctx.l.sugSpace, {Phase.period}),
+                      (ctx.l.sugHugs, {Phase.period, Phase.pms}),
+                      (ctx.l.sugHeat, {Phase.period}),
+                      (ctx.l.sugSweet, {Phase.pms}),
+                      (ctx.l.sugSalty, {Phase.pms}),
+                      (ctx.l.sugComfortFood, <Phase>{}),
+                      (ctx.l.sugFlowers, <Phase>{}),
+                    ])
+                      ActionChip(
+                        label: Text(label.trim()),
+                        onPressed: () => setS(() {
+                          final cur = text.text.trim();
+                          text.text = cur.isEmpty ? label : '$cur. $label';
+                          text.selection = TextSelection.collapsed(offset: text.text.length);
+                          phases.addAll(ph);
+                        }),
                       ),
-                    );
-                    Navigator.pop(ctx);
-                  },
-                  child: Text(ctx.l.save),
+                  ],
                 ),
               ],
-            ),
-          ],
+              const SizedBox(height: 12),
+              TextField(
+                controller: text,
+                autofocus: false,
+                maxLines: 3,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(border: const OutlineInputBorder(), hintText: ctx.l.noteHint),
+              ),
+              const SizedBox(height: 12),
+              Text(ctx.l.showDuring),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  for (final p in selectable)
+                    FilterChip(
+                      avatar: Icon(p.icon, size: 18),
+                      label: Text(ctx.l.phase(p)),
+                      selected: phases.contains(p),
+                      onSelected: (s) => setS(() => s ? phases.add(p) : phases.remove(p)),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  if (existing != null)
+                    TextButton.icon(
+                      icon: const Icon(Icons.delete_outline),
+                      label: Text(ctx.l.delete),
+                      onPressed: () {
+                        state.deleteNote(existing.id);
+                        Navigator.pop(ctx);
+                      },
+                    ),
+                  const Spacer(),
+                  FilledButton(
+                    onPressed: () {
+                      if (text.text.trim().isEmpty) return;
+                      // Fertile also covers ovulation day.
+                      final ph = {...phases, if (phases.contains(Phase.fertile)) Phase.ovulation};
+                      state.upsertNote(
+                        HerNote(
+                          id: existing?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
+                          text: text.text.trim(),
+                          phases: ph,
+                        ),
+                      );
+                      Navigator.pop(ctx);
+                    },
+                    child: Text(ctx.l.save),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     ),

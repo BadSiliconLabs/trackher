@@ -63,6 +63,14 @@ void main() {
     expect(b.id, isNot(a.id));
   });
 
+  test('tip rotation has no repeats and starts with the daily tip', () {
+    final t = loadTips();
+    final list = t.dailyTips(20000, Phase.pms);
+    expect(list.first.id, t.dailyTip(20000, Phase.pms)!.id);
+    expect(list.map((e) => e.id).toSet().length, list.length);
+    expect(list.length, t.forPhase(Phase.pms).length);
+  });
+
   test('store round-trips all data', () async {
     final dir = await Directory.systemTemp.createTemp('trackher');
     final store = Store(dir: () async => dir);
@@ -75,7 +83,7 @@ void main() {
         dayNumber(DateTime(2026, 10, 4)): DayLog(date: DateTime(2026, 10, 4), mood: '😴', symptoms: {'cramps'}),
       },
       tipFeedback: {'pms-hugs': 1},
-      settings: Settings(herName: 'Anna', notifyFertile: true, onboarded: true),
+      settings: Settings(herName: 'Anna', notifyFertile: true, onboarded: true, appLock: true, language: 'it'),
     );
     await store.save(d);
     final r = await store.load();
@@ -86,6 +94,8 @@ void main() {
     expect(r.tipFeedback['pms-hugs'], 1);
     expect(r.settings.herName, 'Anna');
     expect(r.settings.notifyFertile, isTrue);
+    expect(r.settings.appLock, isTrue);
+    expect(r.settings.language, 'it');
     expect(() => Store.decode('{"foo":1}'), throwsFormatException);
     await dir.delete(recursive: true);
   });

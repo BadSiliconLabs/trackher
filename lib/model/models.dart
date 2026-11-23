@@ -82,6 +82,7 @@ class Settings {
   int notifyMinute;
   String themeMode; // system | light | dark
   String language; // system | en | it | es
+  bool appLock;
   bool onboarded;
 
   Settings({
@@ -97,6 +98,7 @@ class Settings {
     this.notifyMinute = 0,
     this.themeMode = 'system',
     this.language = 'system',
+    this.appLock = false,
     this.onboarded = false,
   });
 
@@ -113,6 +115,7 @@ class Settings {
     'notifyMinute': notifyMinute,
     'themeMode': themeMode,
     'language': language,
+    'appLock': appLock,
     'onboarded': onboarded,
   };
 
@@ -131,6 +134,7 @@ class Settings {
       notifyMinute: j['notifyMinute'] ?? d.notifyMinute,
       themeMode: j['themeMode'] ?? d.themeMode,
       language: j['language'] ?? d.language,
+      appLock: j['appLock'] ?? d.appLock,
       onboarded: j['onboarded'] ?? d.onboarded,
     );
   }

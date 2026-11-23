@@ -73,6 +73,20 @@ extension LX on L {
     Regularity.irregular => regIrregular,
   };
 
+  String event(CycleEventKind k) => switch (k) {
+    CycleEventKind.pms => evPms,
+    CycleEventKind.period => evPeriod,
+    CycleEventKind.fertile => evFertile,
+    CycleEventKind.ovulation => evOvulation,
+  };
+
+  /// "today", "tomorrow", "in 3 days".
+  String relativeDay(int days) => days <= 0
+      ? relToday
+      : days == 1
+      ? relTomorrow
+      : relInDays(days);
+
   /// Her name, or a localized "her"/"She" when not set.
   String her(Settings s) => s.herName.trim().isEmpty ? herDefault : s.herName.trim();
   String herCap(Settings s) => s.herName.trim().isEmpty ? herDefaultCap : s.herName.trim();

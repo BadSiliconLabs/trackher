@@ -89,6 +89,23 @@ void main() {
     expect(cov, inInclusiveRange(0.7, 0.92));
   });
 
+  test('upcoming events are sorted, in the future and consistent with the forecast', () {
+    final starts = [DateTime(2026, 9, 22), DateTime(2026, 10, 21), DateTime(2026, 11, 19)];
+    final f = Forecast.compute(starts, today: today)!;
+    final ev = f.upcomingEvents(max: 8);
+    expect(ev, isNotEmpty);
+    for (var i = 0; i < ev.length; i++) {
+      expect(ev[i].day, greaterThanOrEqualTo(f.todayDay));
+      if (i > 0) expect(ev[i].day, greaterThanOrEqualTo(ev[i - 1].day));
+    }
+    final period = ev.firstWhere((e) => e.kind == CycleEventKind.period);
+    expect(period.day, f.next.mode);
+    final pms = ev.firstWhere((e) => e.kind == CycleEventKind.pms);
+    expect(period.day - pms.day, 6);
+    expect(f.cycleProgress, inInclusiveRange(0.0, 1.0));
+    expect(f.currentCycleLength, f.next.mode - f.lastStartDay);
+  });
+
   test('phase for cycle day', () {
     expect(phaseForCycleDay(0, 28, 5), Phase.period);
     expect(phaseForCycleDay(7, 28, 5), Phase.follicular);

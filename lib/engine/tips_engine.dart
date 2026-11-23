@@ -73,6 +73,16 @@ class TipsEngine {
     return pool[_hash(dayNumber) % pool.length];
   }
 
+  /// Today's tip first, then the other eligible tips in a stable per-day order
+  /// (no repeats), for "show me another one".
+  List<Tip> dailyTips(int dayNumber, Phase phase, {Map<String, int> feedback = const {}}) {
+    final first = dailyTip(dayNumber, phase, feedback: feedback);
+    if (first == null) return const [];
+    final rest = forPhase(phase, feedback: feedback).where((t) => t.id != first.id).toList()
+      ..sort((a, b) => _hash(dayNumber ^ a.id.hashCode).compareTo(_hash(dayNumber ^ b.id.hashCode)));
+    return [first, ...rest];
+  }
+
   static int _hash(int x) {
     var h = x * 0x9E3779B1;
     h = (h ^ (h >> 15)) & 0x7fffffff;
