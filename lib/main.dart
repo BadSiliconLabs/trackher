@@ -10,14 +10,17 @@ import 'ui/app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final tips = TipsEngine.fromJsonString(await rootBundle.loadString('assets/tips.json'));
+  final tips = {
+    for (final lang in AppState.supportedLanguages)
+      lang: TipsEngine.fromJsonString(await rootBundle.loadString('assets/tips/$lang.json')),
+  };
   final notifications = NotificationService();
   try {
     await notifications.init();
   } catch (_) {
     // Notifications are optional; the app works without them.
   }
-  final state = AppState(store: Store(), tips: tips, reschedule: notifications.reschedule);
+  final state = AppState(store: Store(), tipsByLang: tips, reschedule: notifications.reschedule);
   await state.load();
   runApp(
     MultiProvider(

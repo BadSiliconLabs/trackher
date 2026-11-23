@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:intl/intl.dart' show DateFormat;
+import 'package:intl/intl.dart' show DateFormat, NumberFormat;
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
@@ -8,7 +8,10 @@ import '../engine/day.dart';
 import '../engine/phases.dart';
 import '../engine/predictor.dart';
 import '../state/app_state.dart';
+import 'l10n.dart';
 import 'theme.dart';
+
+String _d1(double v) => NumberFormat('0.0').format(v);
 
 class ForecastPage extends StatefulWidget {
   const ForecastPage({super.key});
@@ -25,9 +28,10 @@ class _ForecastPageState extends State<ForecastPage> {
     final state = context.watch<AppState>();
     final f = state.forecast;
     final theme = Theme.of(context);
+    final l = context.l;
     if (f == null) {
-      return const Center(
-        child: Padding(padding: EdgeInsets.all(32), child: Text('Log at least one period start to see the forecast.')),
+      return Center(
+        child: Padding(padding: const EdgeInsets.all(32), child: Text(context.l.needOneDate)),
       );
     }
     final sel = math.min(_sel, f.upcoming.length - 1);
@@ -43,10 +47,7 @@ class _ForecastPageState extends State<ForecastPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Next start probability',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-                ),
+                Text(l.nextStartProbability, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 10),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -75,6 +76,7 @@ class _ForecastPageState extends State<ForecastPage> {
                       color: Phase.period.color,
                       axis: theme.colorScheme.outline,
                       textStyle: theme.textTheme.labelSmall!,
+                      todayLabel: l.chartToday,
                     ),
                   ),
                 ),
@@ -103,10 +105,14 @@ class _ForecastPageState extends State<ForecastPage> {
                           style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
                         subtitle: Text(
-                          '80%: ${fmt.format(fromDayNumber(lo))} – ${fmt.format(fromDayNumber(hi))} · '
-                          '95%: ${fmt.format(fromDayNumber(lo95))} – ${fmt.format(fromDayNumber(hi95))}',
+                          l.rangeLine(
+                            fmt.format(fromDayNumber(lo)),
+                            fmt.format(fromDayNumber(hi)),
+                            fmt.format(fromDayNumber(lo95)),
+                            fmt.format(fromDayNumber(hi95)),
+                          ),
                         ),
-                        trailing: Text('±${up.sd.toStringAsFixed(1)}d'),
+                        trailing: Text('±${_d1(up.sd)}'),
                       );
                     },
                   ),
@@ -121,36 +127,25 @@ class _ForecastPageState extends State<ForecastPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'What the model learned',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-                ),
+                Text(l.modelLearned, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 12),
+                _Stat(l.avgCycle, l.daysValue(_d1(s.muMean)), l.uncertainty(_d1(s.muSd))),
+                _Stat(l.variation, l.plusMinusDays(_d1(s.sigmaMean)), l.regularity(s.regularity)),
                 _Stat(
-                  'Average cycle',
-                  '${s.muMean.toStringAsFixed(1)} days',
-                  '± ${s.muSd.toStringAsFixed(1)} uncertainty',
-                ),
-                _Stat('Cycle-to-cycle variation', '± ${s.sigmaMean.toStringAsFixed(1)} days', s.regularity),
-                _Stat(
-                  'Period length',
-                  '${state.periodLength} days',
-                  state.learnedPeriodLength ? 'learned from end dates' : 'default (set in Settings)',
+                  l.periodLength,
+                  l.nDays(state.periodLength),
+                  state.learnedPeriodLength ? l.learnedFromEnds : l.defaultFromSettings,
                 ),
                 _Stat(
-                  'Data used',
-                  '${s.gapsUsed} interval${s.gapsUsed == 1 ? '' : 's'}',
-                  s.multiCycleGaps > 0
-                      ? '${s.multiCycleGaps} span multiple cycles (gaps in log, handled)'
-                      : 'from ${state.data.periods.length} logged starts',
+                  l.dataUsed,
+                  l.intervals(s.gapsUsed),
+                  s.multiCycleGaps > 0 ? l.multiCycle(s.multiCycleGaps) : l.fromStarts(state.data.periods.length),
                 ),
                 if (s.gapsUsed < 3)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      s.gapsUsed == 0
-                          ? 'With one date, the forecast uses typical cycle statistics. Add another date to personalise it.'
-                          : 'Each extra logged start narrows the uncertainty.',
+                      s.gapsUsed == 0 ? l.oneDateHint : l.moreDatesHint,
                       style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary),
                     ),
                   ),
@@ -163,18 +158,9 @@ class _ForecastPageState extends State<ForecastPage> {
           data: theme.copyWith(dividerColor: Colors.transparent),
           child: Card(
             child: ExpansionTile(
-              title: const Text('How does this work?'),
+              title: Text(l.howItWorks),
               childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              children: const [
-                Text(
-                  'Each cycle length is modelled as a bell curve (Gaussian) with an unknown average and spread. '
-                  'Starting from typical values (about 28.5 ± 3.5 days), the app updates its belief with every gap between your '
-                  'logged dates using Bayes\' rule. Gaps don\'t need to be consecutive: a 3-month gap is automatically '
-                  'recognised as about 3 cycles. Recent data counts more than old data.\n\n'
-                  'The forecast mixes all plausible averages and spreads, so the uncertainty honestly grows for '
-                  'cycles further ahead. Not medical advice and not contraception.',
-                ),
-              ],
+              children: [Text(l.howItWorksBody)],
             ),
           ),
         ),
@@ -191,21 +177,12 @@ class _IntervalText extends StatelessWidget {
   Widget build(BuildContext context) {
     final fmt = DateFormat.MMMEd();
     final (lo, hi) = fc.interval(0.8);
-    return Text.rich(
-      TextSpan(
-        children: [
-          const TextSpan(text: 'Most likely '),
-          TextSpan(
-            text: fmt.format(fc.modeDate),
-            style: const TextStyle(fontWeight: FontWeight.w700),
-          ),
-          TextSpan(text: ' (${(fc.prob(fc.mode) * 100).round()}%). 80% chance between '),
-          TextSpan(
-            text: '${fmt.format(fromDayNumber(lo))} and ${fmt.format(fromDayNumber(hi))}',
-            style: const TextStyle(fontWeight: FontWeight.w700),
-          ),
-          const TextSpan(text: '.'),
-        ],
+    return Text(
+      context.l.forecastSummary(
+        fmt.format(fc.modeDate),
+        (fc.prob(fc.mode) * 100).round(),
+        fmt.format(fromDayNumber(lo)),
+        fmt.format(fromDayNumber(hi)),
       ),
     );
   }
@@ -244,8 +221,10 @@ class _BellPainter extends CustomPainter {
   final int today;
   final Color color, axis;
   final TextStyle textStyle;
+  final String todayLabel;
 
   _BellPainter({
+    required this.todayLabel,
     required this.forecast,
     required this.today,
     required this.color,
@@ -314,7 +293,7 @@ class _BellPainter extends CustomPainter {
       for (var y = topPad; y < topPad + h; y += 6) {
         canvas.drawLine(Offset(x, y), Offset(x, y + 3), tp);
       }
-      _text(canvas, 'today', Offset(x + 3, topPad + 2), center: false);
+      _text(canvas, todayLabel, Offset(x + 3, topPad + 2), center: false);
     }
   }
 

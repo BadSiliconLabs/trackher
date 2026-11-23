@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../engine/phases.dart';
 import '../model/models.dart';
 import '../state/app_state.dart';
+import 'l10n.dart';
 import 'theme.dart';
 
 class NotesPage extends StatelessWidget {
@@ -22,8 +23,7 @@ class NotesPage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(4, 0, 4, 12),
           child: Text(
-            "Things she told you or you learned: what helps, what doesn't, favourite comfort food. "
-            'Tag a note with phases and it shows up on the Today screen at the right time.',
+            context.l.notesIntro,
             style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
           ),
         ),
@@ -34,14 +34,9 @@ class NotesPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Examples', style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
+                  Text(context.l.examples, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
-                  const Text(
-                    '• Period: doesn\'t want to be touched on day 1, but loves a heat pad\n'
-                    '• PMS: craves salty chips, NOT sweets\n'
-                    '• Always: favourite flowers are peonies\n'
-                    '• Follicular: loves hiking dates',
-                  ),
+                  Text(context.l.examplesBody),
                 ],
               ),
             ),
@@ -59,8 +54,8 @@ class NotesPage extends StatelessWidget {
                     spacing: 4,
                     runSpacing: 4,
                     children: [
-                      if (n.phases.isEmpty) const _Mini('Always', null),
-                      for (final p in n.phases) _Mini(p.label, p.color, icon: p.icon),
+                      if (n.phases.isEmpty) _Mini(context.l.always, null),
+                      for (final p in n.phases) _Mini(context.l.phase(p), p.color, icon: p.icon),
                     ],
                   ),
                 ),
@@ -106,7 +101,7 @@ class AddNoteFab extends StatelessWidget {
   Widget build(BuildContext context) => FloatingActionButton.extended(
     onPressed: () => editNote(context, null),
     icon: const Icon(Icons.add),
-    label: const Text('Add note'),
+    label: Text(context.l.addNote),
   );
 }
 
@@ -127,7 +122,7 @@ Future<void> editNote(BuildContext context, HerNote? existing) async {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              existing == null ? 'New note' : 'Edit note',
+              existing == null ? ctx.l.newNote : ctx.l.editNote,
               style: Theme.of(ctx).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 12),
@@ -136,10 +131,10 @@ Future<void> editNote(BuildContext context, HerNote? existing) async {
               autofocus: existing == null,
               maxLines: 3,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'e.g. Wants space on day 1'),
+              decoration: InputDecoration(border: const OutlineInputBorder(), hintText: ctx.l.noteHint),
             ),
             const SizedBox(height: 12),
-            const Text('Show during (none = always)'),
+            Text(ctx.l.showDuring),
             const SizedBox(height: 6),
             Wrap(
               spacing: 6,
@@ -148,7 +143,7 @@ Future<void> editNote(BuildContext context, HerNote? existing) async {
                 for (final p in selectable)
                   FilterChip(
                     avatar: Icon(p.icon, size: 18),
-                    label: Text(p.label),
+                    label: Text(ctx.l.phase(p)),
                     selected: phases.contains(p),
                     onSelected: (s) => setS(() => s ? phases.add(p) : phases.remove(p)),
                   ),
@@ -160,7 +155,7 @@ Future<void> editNote(BuildContext context, HerNote? existing) async {
                 if (existing != null)
                   TextButton.icon(
                     icon: const Icon(Icons.delete_outline),
-                    label: const Text('Delete'),
+                    label: Text(ctx.l.delete),
                     onPressed: () {
                       state.deleteNote(existing.id);
                       Navigator.pop(ctx);
@@ -181,7 +176,7 @@ Future<void> editNote(BuildContext context, HerNote? existing) async {
                     );
                     Navigator.pop(ctx);
                   },
-                  child: const Text('Save'),
+                  child: Text(ctx.l.save),
                 ),
               ],
             ),

@@ -4,18 +4,6 @@ import 'phases.dart';
 
 enum TipCategory { food, comfort, affection, space, plans, words, practical }
 
-extension TipCategoryInfo on TipCategory {
-  String get label => switch (this) {
-    TipCategory.food => 'Food',
-    TipCategory.comfort => 'Comfort',
-    TipCategory.affection => 'Affection',
-    TipCategory.space => 'Space',
-    TipCategory.plans => 'Plans',
-    TipCategory.words => 'Words',
-    TipCategory.practical => 'Practical',
-  };
-}
-
 class Tip {
   final String id;
   final Set<Phase> phases; // empty = any phase

@@ -6,6 +6,7 @@ import '../engine/day.dart';
 import '../engine/phases.dart';
 import '../model/models.dart';
 import '../state/app_state.dart';
+import 'l10n.dart';
 import 'theme.dart';
 import 'widgets/month_calendar.dart';
 
@@ -31,22 +32,18 @@ class CalendarPage extends StatelessWidget {
         const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Text(
-            'Tap a day to log or edit a period, mood or symptoms.',
-            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
-          ),
+          child: Text(context.l.calHint, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline)),
         ),
         const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Text(
-            'Logged periods (${periods.length})',
+            context.l.loggedPeriods(periods.length),
             style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
         const SizedBox(height: 6),
-        if (periods.isEmpty)
-          const Padding(padding: EdgeInsets.all(8), child: Text('None yet. Tap the day her last period started.')),
+        if (periods.isEmpty) Padding(padding: const EdgeInsets.all(8), child: Text(context.l.noPeriodsYet)),
         for (var i = 0; i < periods.length; i++)
           _PeriodTile(
             entry: periods[i],
@@ -149,11 +146,11 @@ class _Legend extends StatelessWidget {
       spacing: 12,
       runSpacing: 6,
       children: [
-        item(Phase.period.color, 'Logged'),
-        item(Phase.period.color.withValues(alpha: 0.4), 'Predicted (shade = probability)'),
-        item(Phase.fertile.color.withValues(alpha: 0.4), 'Fertile'),
-        item(Phase.ovulation.color.withValues(alpha: 0.6), 'Ovulation'),
-        item(Phase.pms.color.withValues(alpha: 0.4), 'PMS'),
+        item(Phase.period.color, context.l.legendLogged),
+        item(Phase.period.color.withValues(alpha: 0.4), context.l.legendPredicted),
+        item(Phase.fertile.color.withValues(alpha: 0.4), context.l.phaseFertile),
+        item(Phase.ovulation.color.withValues(alpha: 0.6), context.l.phaseOvulation),
+        item(Phase.pms.color.withValues(alpha: 0.4), context.l.phasePms),
       ],
     );
   }
@@ -168,8 +165,8 @@ class _PeriodTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final fmt = DateFormat.yMMMd();
     final sub = [
-      if (entry.length != null) '${entry.length} days' else 'end not logged',
-      if (gap != null) '$gap days after previous',
+      if (entry.length != null) context.l.nDays(entry.length!) else context.l.endNotLogged,
+      if (gap != null) context.l.daysAfterPrevious(gap!),
     ].join(' · ');
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 4),
@@ -209,14 +206,15 @@ class _DaySheet extends StatelessWidget {
     final within = state.periodOn(day);
     final f = state.forecast;
     final log = state.logFor(day) ?? DayLog(date: day);
-    final name = state.settings.name;
+    final l = context.l;
+    final name = l.her(state.settings);
 
     String? info;
     if (f != null) {
       final ph = f.phaseOn(n);
       final pp = f.periodProbability(n);
-      info = ph.label;
-      if (n >= state.todayDay && pp > 0.02 && within == null) info += ' · ${(pp * 100).round()}% chance of period';
+      info = l.phase(ph);
+      if (n >= state.todayDay && pp > 0.02 && within == null) info += ' · ${l.chanceOfPeriod((pp * 100).round())}';
     }
 
     return SafeArea(
@@ -243,12 +241,12 @@ class _DaySheet extends StatelessWidget {
                 ),
               const SizedBox(height: 16),
               if (future)
-                Text('This day is in the future. You can log it once it happens.', style: theme.textTheme.bodySmall)
+                Text(l.futureDay, style: theme.textTheme.bodySmall)
               else ...[
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('Period started this day'),
-                  subtitle: Text('First day of bleeding for $name'),
+                  title: Text(l.periodStartedThisDay),
+                  subtitle: Text(l.firstDayFor(name)),
                   value: isStart,
                   onChanged: (v) => v
                       ? state.addPeriodStart(day)
@@ -257,8 +255,8 @@ class _DaySheet extends StatelessWidget {
                 if (within != null && !isStart)
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('Period ended this day'),
-                    subtitle: const Text('Optional. Helps learn her period length'),
+                    title: Text(l.periodEndedThisDay),
+                    subtitle: Text(l.periodEndHint),
                     value: within.end != null && dayNumber(within.end!) == n,
                     onChanged: (v) => state.setPeriodEnd(within, v ? day : null),
                   ),
@@ -266,15 +264,12 @@ class _DaySheet extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
-                      'Ended ${DateFormat.MMMd().format(within.end!)} (${within.length} days)',
+                      l.endedOn(DateFormat.MMMd().format(within.end!), l.nDays(within.length!)),
                       style: theme.textTheme.bodySmall,
                     ),
                   ),
                 const Divider(height: 24),
-                Text(
-                  'How was she? (optional)',
-                  style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-                ),
+                Text(l.howWasShe, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 6,
@@ -282,7 +277,7 @@ class _DaySheet extends StatelessWidget {
                     for (final m in kMoods)
                       ChoiceChip(
                         showCheckmark: false,
-                        tooltip: m,
+                        tooltip: l.mood(m),
                         label: Icon(kMoodIcons[m], size: 24),
                         selected: log.mood == m,
                         onSelected: (sel) => state.setLog(
@@ -298,7 +293,7 @@ class _DaySheet extends StatelessWidget {
                   children: [
                     for (final s in kSymptoms)
                       FilterChip(
-                        label: Text(s),
+                        label: Text(l.symptom(s)),
                         selected: log.symptoms.contains(s),
                         onSelected: (sel) {
                           final set = {...log.symptoms};
@@ -349,7 +344,7 @@ class _NoteFieldState extends State<_NoteField> {
   Widget build(BuildContext context) => TextField(
     controller: _c,
     maxLines: 2,
-    decoration: const InputDecoration(labelText: 'Note', border: OutlineInputBorder()),
+    decoration: InputDecoration(labelText: context.l.note, border: const OutlineInputBorder()),
     onSubmitted: (_) => _save(),
     onTapOutside: (_) => _save(),
   );

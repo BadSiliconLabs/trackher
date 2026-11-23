@@ -33,6 +33,8 @@ class ModelConfig {
   });
 }
 
+enum Regularity { unknown, veryRegular, regular, somewhatIrregular, irregular }
+
 /// Summary of what the model learned about her cycle.
 class CycleStats {
   final double muMean;
@@ -51,12 +53,12 @@ class CycleStats {
     required this.suspiciousGaps,
   });
 
-  String get regularity {
-    if (gapsUsed == 0) return 'unknown';
-    if (sigmaMean < 2) return 'very regular';
-    if (sigmaMean < 4) return 'regular';
-    if (sigmaMean < 7) return 'somewhat irregular';
-    return 'irregular';
+  Regularity get regularity {
+    if (gapsUsed == 0) return Regularity.unknown;
+    if (sigmaMean < 2) return Regularity.veryRegular;
+    if (sigmaMean < 4) return Regularity.regular;
+    if (sigmaMean < 7) return Regularity.somewhatIrregular;
+    return Regularity.irregular;
   }
 }
 

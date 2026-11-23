@@ -8,7 +8,10 @@ import 'package:trackher/engine/tips_engine.dart';
 import 'package:trackher/model/models.dart';
 import 'package:trackher/state/app_state.dart';
 
-TipsEngine loadTips() => TipsEngine.fromJsonString(File('assets/tips.json').readAsStringSync());
+TipsEngine loadTips([String lang = 'en']) =>
+    TipsEngine.fromJsonString(File('assets/tips/$lang.json').readAsStringSync());
+
+Map<String, TipsEngine> allTips() => {for (final l in AppState.supportedLanguages) l: loadTips(l)};
 
 void main() {
   test('tips asset parses and covers every phase', () {
@@ -18,6 +21,38 @@ void main() {
     for (final p in Phase.values) {
       expect(t.forPhase(p).where((x) => x.phases.isNotEmpty), isNotEmpty, reason: p.name);
     }
+  });
+
+  test('translated tips match English ids, phases and categories', () {
+    final en = loadTips('en').tips;
+    for (final lang in ['it', 'es']) {
+      final other = loadTips(lang).tips;
+      expect(other.length, en.length, reason: lang);
+      for (var i = 0; i < en.length; i++) {
+        expect(other[i].id, en[i].id);
+        expect(other[i].phases, en[i].phases);
+        expect(other[i].category, en[i].category);
+        expect(other[i].text, isNot(en[i].text), reason: '$lang ${en[i].id} untranslated');
+      }
+    }
+  });
+
+  test('language: explicit setting, else phone language, else English', () async {
+    final dir = await Directory.systemTemp.createTemp('trackher');
+    var phone = ['de', 'it'];
+    final s = AppState(
+      store: Store(dir: () async => dir),
+      tipsByLang: allTips(),
+      systemLanguages: () => phone,
+    );
+    await s.load();
+    expect(s.lang, 'it');
+    expect(s.tips.tips.first.title, loadTips('it').tips.first.title);
+    phone = ['fr'];
+    expect(s.lang, 'en');
+    await s.updateSettings((x) => x.language = 'es');
+    expect(s.lang, 'es');
+    await dir.delete(recursive: true);
   });
 
   test('daily tip is deterministic and respects dislikes', () {
@@ -59,7 +94,7 @@ void main() {
     final dir = await Directory.systemTemp.createTemp('trackher');
     final s = AppState(
       store: Store(dir: () async => dir),
-      tips: loadTips(),
+      tipsByLang: allTips(),
       clock: () => DateTime(2026, 11, 23),
     );
     await s.load();

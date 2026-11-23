@@ -30,13 +30,17 @@ Future<void> _loadFonts() async {
 }
 
 void main() {
-  final tips = TipsEngine.fromJsonString(File('assets/tips.json').readAsStringSync());
+  final tips = {
+    for (final l in AppState.supportedLanguages)
+      l: TipsEngine.fromJsonString(File('assets/tips/$l.json').readAsStringSync()),
+  };
 
-  Future<AppState> makeState(bool onboarded) async {
+  Future<AppState> makeState(bool onboarded, {String lang = 'en'}) async {
     final dir = await Directory.systemTemp.createTemp('trackher');
     final s = AppState(
       store: Store(dir: () async => dir),
-      tips: tips,
+      tipsByLang: tips,
+      systemLanguages: () => [lang],
       clock: () => DateTime(2026, 11, 23),
     );
     await s.load();
@@ -82,6 +86,32 @@ void main() {
     await t.tap(find.byTooltip('Guide'));
     await t.pumpAndSettle();
     await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/guide.png'));
+  });
+
+  for (final (lang, tab) in [('it', 0), ('es', 0), ('it', 2), ('es', 3)]) {
+    testWidgets('screen $lang tab $tab', (t) async {
+      t.view.physicalSize = const Size(1080, 2340);
+      t.view.devicePixelRatio = 2.75;
+      final s = await t.runAsync(() => makeState(true, lang: lang));
+      await t.pumpWidget(wrap(s!));
+      await t.pumpAndSettle();
+      if (tab > 0) {
+        await t.tap(find.byType(NavigationDestination).at(tab));
+        await t.pumpAndSettle();
+      }
+      await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/${lang}_tab$tab.png'));
+    });
+  }
+
+  testWidgets('screen guide es', (t) async {
+    t.view.physicalSize = const Size(1080, 2340);
+    t.view.devicePixelRatio = 2.75;
+    final s = await t.runAsync(() => makeState(true, lang: 'es'));
+    await t.pumpWidget(wrap(s!));
+    await t.pumpAndSettle();
+    await t.tap(find.byTooltip('Guía'));
+    await t.pumpAndSettle();
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/es_guide.png'));
   });
 
   testWidgets('screen onboarding', (t) async {

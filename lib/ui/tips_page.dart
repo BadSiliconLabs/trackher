@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../engine/phases.dart';
 import '../engine/tips_engine.dart';
 import '../state/app_state.dart';
+import 'l10n.dart';
 import 'theme.dart';
 import 'widgets/tip_card.dart';
 
@@ -25,6 +26,7 @@ class _TipsPageState extends State<TipsPage> {
     final current = state.forecast?.likelyPhase ?? Phase.follicular;
     final phase = _phase ?? current;
     final theme = Theme.of(context);
+    final l = context.l;
     final fb = state.data.tipFeedback;
     var tips = _showHidden
         ? state.tips.tips.where((t) => (fb[t.id] ?? 0) < 0).toList()
@@ -44,7 +46,7 @@ class _TipsPageState extends State<TipsPage> {
                   padding: const EdgeInsets.only(right: 6),
                   child: ChoiceChip(
                     avatar: Icon(p.icon, size: 18),
-                    label: Text(p == current ? '${p.label} (now)' : p.label),
+                    label: Text(p == current ? l.phaseNow(l.phase(p)) : l.phase(p)),
                     selected: !_showHidden && p == phase,
                     onSelected: (_) => setState(() {
                       _showHidden = false;
@@ -63,7 +65,7 @@ class _TipsPageState extends State<TipsPage> {
               Padding(
                 padding: const EdgeInsets.only(right: 6),
                 child: FilterChip(
-                  label: const Text('All'),
+                  label: Text(l.all),
                   selected: _cat == null,
                   onSelected: (_) => setState(() => _cat = null),
                 ),
@@ -73,7 +75,7 @@ class _TipsPageState extends State<TipsPage> {
                   padding: const EdgeInsets.only(right: 6),
                   child: FilterChip(
                     avatar: Icon(c.icon, size: 18),
-                    label: Text(c.label),
+                    label: Text(l.category(c)),
                     selected: _cat == c,
                     onSelected: (s) => setState(() => _cat = s ? c : null),
                   ),
@@ -86,14 +88,14 @@ class _TipsPageState extends State<TipsPage> {
           Padding(
             padding: const EdgeInsets.only(bottom: 10, left: 4, right: 4),
             child: Text(
-              '${phase.blurb}\nThese are ideas, not rules. What she tells you always wins.',
+              '${l.blurb(phase)}\n${l.tipsDisclaimer}',
               style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.outline),
             ),
           ),
         if (tips.isEmpty)
-          const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(child: Text('No tips here.')),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Center(child: Text(l.noTips)),
           ),
         for (final t in tips)
           Padding(
@@ -103,7 +105,7 @@ class _TipsPageState extends State<TipsPage> {
         Center(
           child: TextButton(
             onPressed: () => setState(() => _showHidden = !_showHidden),
-            child: Text(_showHidden ? 'Back to tips' : 'Show hidden tips'),
+            child: Text(_showHidden ? l.backToTips : l.showHidden),
           ),
         ),
       ],

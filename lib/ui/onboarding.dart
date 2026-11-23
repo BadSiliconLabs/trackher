@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import '../engine/day.dart';
 import '../services/notifications.dart';
 import '../state/app_state.dart';
+import 'l10n.dart';
 import 'theme.dart';
+import 'widgets/language_menu.dart';
 import 'widgets/month_calendar.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -80,6 +82,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const Align(alignment: Alignment.topRight, child: LanguageMenuButton()),
         const Spacer(),
         Container(
           width: 64,
@@ -90,29 +93,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
         const SizedBox(height: 16),
         Text(kAppName, style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w800)),
         const SizedBox(height: 12),
-        Text(
-          'Know where she is in her cycle and get practical ideas to support her: '
-          'when to bring snacks, when to give space, when to plan a big date.',
-          style: theme.textTheme.titleMedium,
-        ),
+        Text(context.l.obTagline, style: theme.textTheme.titleMedium),
         const SizedBox(height: 20),
-        _InfoBox(
-          icon: Icons.handshake_outlined,
-          text:
-              'Every person is different, and she is the expert on herself. '
-              'This works best when she knows about it and helps you fill it in.',
-        ),
+        _InfoBox(icon: Icons.handshake_outlined, text: context.l.obRespect),
         const SizedBox(height: 10),
-        _InfoBox(
-          icon: Icons.lock_outline,
-          text:
-              'Everything stays on this phone. No account, no cloud. '
-              'Not medical advice and not contraception.',
-        ),
+        _InfoBox(icon: Icons.lock_outline, text: context.l.obPrivacy),
         const Spacer(),
         SizedBox(
           width: double.infinity,
-          child: FilledButton(onPressed: _next, child: const Text("Let's start")),
+          child: FilledButton(onPressed: _next, child: Text(context.l.obStart)),
         ),
       ],
     ),
@@ -124,20 +113,20 @@ class _OnboardingPageState extends State<OnboardingPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
-        Text("What's her name?", style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
+        Text(context.l.obNameTitle, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700)),
         const SizedBox(height: 8),
-        Text('Optional. Only used to make the text more personal.', style: theme.textTheme.bodyLarge),
+        Text(context.l.obNameHint, style: theme.textTheme.bodyLarge),
         const SizedBox(height: 24),
         TextField(
           controller: _name,
           textCapitalization: TextCapitalization.words,
-          decoration: const InputDecoration(labelText: 'Her name or nickname', border: OutlineInputBorder()),
+          decoration: InputDecoration(labelText: context.l.obNameLabel, border: const OutlineInputBorder()),
           onSubmitted: (_) => _next(),
         ),
         const Spacer(),
         SizedBox(
           width: double.infinity,
-          child: FilledButton(onPressed: _next, child: const Text('Next')),
+          child: FilledButton(onPressed: _next, child: Text(context.l.next)),
         ),
       ],
     ),
@@ -154,18 +143,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Text(
-              'When did her periods start?',
+              context.l.obDatesTitle,
               style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
           const SizedBox(height: 6),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              'Tap the first day of any periods you remember. One is enough. '
-              'More dates (even months apart) make the forecast more accurate.',
-              style: theme.textTheme.bodyMedium,
-            ),
+            child: Text(context.l.obDatesHint, style: theme.textTheme.bodyMedium),
           ),
           const SizedBox(height: 8),
           MonthCalendar(
@@ -224,13 +209,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
             width: double.infinity,
             child: FilledButton(
               onPressed: _days.isEmpty ? null : _finish,
-              child: Text(
-                _days.isEmpty ? 'Pick at least one date' : 'Done (${_days.length} date${_days.length == 1 ? '' : 's'})',
-              ),
+              child: Text(_days.isEmpty ? context.l.obPickOne : context.l.obDone(_days.length)),
             ),
           ),
           Center(
-            child: TextButton(onPressed: _finish, child: const Text("I don't know yet, skip")),
+            child: TextButton(onPressed: _finish, child: Text(context.l.obSkip)),
           ),
         ],
       ),

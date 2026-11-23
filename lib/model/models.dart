@@ -81,6 +81,7 @@ class Settings {
   int notifyHour;
   int notifyMinute;
   String themeMode; // system | light | dark
+  String language; // system | en | it | es
   bool onboarded;
 
   Settings({
@@ -95,11 +96,9 @@ class Settings {
     this.notifyHour = 9,
     this.notifyMinute = 0,
     this.themeMode = 'system',
+    this.language = 'system',
     this.onboarded = false,
   });
-
-  String get name => herName.trim().isEmpty ? 'her' : herName.trim();
-  String get nameCap => herName.trim().isEmpty ? 'She' : herName.trim();
 
   Map<String, dynamic> toJson() => {
     'herName': herName,
@@ -113,6 +112,7 @@ class Settings {
     'notifyHour': notifyHour,
     'notifyMinute': notifyMinute,
     'themeMode': themeMode,
+    'language': language,
     'onboarded': onboarded,
   };
 
@@ -130,6 +130,7 @@ class Settings {
       notifyHour: j['notifyHour'] ?? d.notifyHour,
       notifyMinute: j['notifyMinute'] ?? d.notifyMinute,
       themeMode: j['themeMode'] ?? d.themeMode,
+      language: j['language'] ?? d.language,
       onboarded: j['onboarded'] ?? d.onboarded,
     );
   }

@@ -12,7 +12,10 @@ typedef Rescheduler = Future<void> Function(AppState state);
 
 class AppState extends ChangeNotifier {
   final Store store;
-  final TipsEngine tips;
+
+  /// Tip libraries keyed by language code (en, it, es).
+  final Map<String, TipsEngine> tipsByLang;
+  final List<String> Function() _systemLanguages;
   final Rescheduler? reschedule;
   final DateTime Function() _clock;
 
@@ -21,8 +24,30 @@ class AppState extends ChangeNotifier {
   bool loaded = false;
   Timer? _rescheduleDebounce;
 
-  AppState({required this.store, required this.tips, this.reschedule, DateTime Function()? clock})
-    : _clock = clock ?? DateTime.now;
+  AppState({
+    required this.store,
+    required this.tipsByLang,
+    this.reschedule,
+    DateTime Function()? clock,
+    List<String> Function()? systemLanguages,
+  }) : _clock = clock ?? DateTime.now,
+       _systemLanguages = systemLanguages ?? _platformLanguages;
+
+  static const supportedLanguages = ['en', 'it', 'es'];
+
+  static List<String> _platformLanguages() => [for (final l in PlatformDispatcher.instance.locales) l.languageCode];
+
+  /// Active language: explicit setting, else the first supported phone language, else English.
+  String get lang {
+    final set = settings.language;
+    if (supportedLanguages.contains(set)) return set;
+    for (final l in _systemLanguages()) {
+      if (supportedLanguages.contains(l)) return l;
+    }
+    return 'en';
+  }
+
+  TipsEngine get tips => tipsByLang[lang] ?? tipsByLang['en'] ?? tipsByLang.values.first;
 
   DateTime get today => dateOnly(_clock());
   int get todayDay => dayNumber(today);

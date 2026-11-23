@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
-import '../../engine/phases.dart';
 import '../../engine/tips_engine.dart';
 import '../../state/app_state.dart';
+import '../l10n.dart';
 import '../theme.dart';
 
 class TipCard extends StatelessWidget {
@@ -42,30 +42,33 @@ class TipCard extends StatelessWidget {
                   child: Wrap(
                     spacing: 4,
                     children: [
-                      _Tag(tip.category.label, theme.colorScheme.primary),
+                      _Tag(context.l.category(tip.category), theme.colorScheme.primary),
                       if (tip.phases.isEmpty)
-                        _Tag('Any time', theme.colorScheme.outline)
+                        _Tag(context.l.anyTime, theme.colorScheme.outline)
                       else
-                        for (final p in tip.phases) _Tag(p.label, p.color),
+                        for (final p in tip.phases) _Tag(context.l.phase(p), p.color),
                     ],
                   ),
                 ),
                 IconButton(
-                  tooltip: 'Helpful',
+                  tooltip: context.l.helpful,
                   icon: Icon(fb > 0 ? Icons.thumb_up : Icons.thumb_up_outlined, size: 20),
                   color: fb > 0 ? theme.colorScheme.primary : null,
                   onPressed: () => state.setTipFeedback(tip.id, fb > 0 ? 0 : 1),
                 ),
                 IconButton(
-                  tooltip: 'Not for us (hide)',
+                  tooltip: context.l.hideTip,
                   icon: Icon(fb < 0 ? Icons.thumb_down : Icons.thumb_down_outlined, size: 20),
                   onPressed: () {
                     state.setTipFeedback(tip.id, fb < 0 ? 0 : -1);
                     if (fb >= 0) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text('Tip hidden'),
-                          action: SnackBarAction(label: 'Undo', onPressed: () => state.setTipFeedback(tip.id, 0)),
+                          content: Text(context.l.tipHidden),
+                          action: SnackBarAction(
+                            label: context.l.undo,
+                            onPressed: () => state.setTipFeedback(tip.id, 0),
+                          ),
                         ),
                       );
                     }

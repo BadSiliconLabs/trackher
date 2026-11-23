@@ -6,6 +6,7 @@ import '../engine/day.dart';
 import '../engine/phases.dart';
 import '../state/app_state.dart';
 import 'guide_page.dart';
+import 'l10n.dart';
 import 'theme.dart';
 import 'widgets/tip_card.dart';
 
@@ -22,31 +23,25 @@ class HomePage extends StatelessWidget {
     final phase = f.likelyPhase;
     final notes = state.notesFor(phase);
     final tip = state.tipForDay(state.todayDay);
+    final l = context.l;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
       children: [
         if (f.lastStartAssumed) ...[
-          _Banner(
-            icon: Icons.history,
-            text:
-                "You haven't logged a period in a while, so the forecast assumes cycles kept going. "
-                'Log the latest start for better accuracy.',
-            action: 'Log',
-            onAction: () => onNavigate(1),
-          ),
+          _Banner(icon: Icons.history, text: l.bannerStale, action: l.bannerLog, onAction: () => onNavigate(1)),
           const SizedBox(height: 12),
         ],
         if (f.stats.suspiciousGaps.isNotEmpty) ...[
           _Banner(
             icon: Icons.warning_amber_rounded,
-            text: 'Some logged starts are less than 15 days apart and were ignored (spotting or a duplicate?).',
-            action: 'Review',
+            text: l.bannerSuspicious,
+            action: l.bannerReview,
             onAction: () => onNavigate(1),
           ),
           const SizedBox(height: 12),
         ],
-        _PhaseCard(forecast: f, name: state.settings.name),
+        _PhaseCard(forecast: f),
         const SizedBox(height: 12),
         _QuickActions(state: state),
         const SizedBox(height: 16),
@@ -54,8 +49,8 @@ class HomePage extends StatelessWidget {
         if (notes.isNotEmpty) ...[
           const SizedBox(height: 20),
           _SectionTitle(
-            'Remember',
-            trailing: TextButton(onPressed: () => onNavigate(4), child: const Text('All notes')),
+            l.remember,
+            trailing: TextButton(onPressed: () => onNavigate(4), child: Text(l.allNotes)),
           ),
           for (final n in notes)
             Padding(
@@ -69,8 +64,8 @@ class HomePage extends StatelessWidget {
         if (tip != null) ...[
           const SizedBox(height: 20),
           _SectionTitle(
-            "Today's tip",
-            trailing: TextButton(onPressed: () => onNavigate(3), child: const Text('More tips')),
+            l.todaysTip,
+            trailing: TextButton(onPressed: () => onNavigate(3), child: Text(l.moreTips)),
           ),
           TipCard(tip: tip),
         ],
@@ -81,8 +76,7 @@ class HomePage extends StatelessWidget {
 
 class _PhaseCard extends StatelessWidget {
   final Forecast forecast;
-  final String name;
-  const _PhaseCard({required this.forecast, required this.name});
+  const _PhaseCard({required this.forecast});
 
   @override
   Widget build(BuildContext context) {
@@ -93,16 +87,17 @@ class _PhaseCard extends StatelessWidget {
     final until = f.daysUntilNext;
     final theme = Theme.of(context);
     final fmt = DateFormat.MMMd();
+    final l = context.l;
 
     String headline;
     if (f.pAlreadyStarted > 0.5 && phase != Phase.period) {
-      headline = 'Period could start any day now';
+      headline = l.anyDayNow;
     } else if (until > 0) {
-      headline = 'Next period in ~$until day${until == 1 ? '' : 's'}';
+      headline = l.nextIn(until);
     } else if (until == 0) {
-      headline = 'Period most likely starts today';
+      headline = l.startsToday;
     } else {
-      headline = 'Period probably started';
+      headline = l.probablyStarted;
     }
 
     return Container(
@@ -123,7 +118,7 @@ class _PhaseCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'Cycle day ${f.cycleDay}',
+                  l.cycleDay(f.cycleDay),
                   style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white70),
                 ),
                 const Spacer(),
@@ -132,17 +127,17 @@ class _PhaseCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${likely ? 'Likely ' : ''}${likely ? phase.label.toLowerCase() : phase.label}',
+              likely ? l.likelyPhase(l.phase(phase)) : l.phase(phase),
               style: theme.textTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
-            Text(phase.blurb, style: const TextStyle(color: Colors.white, height: 1.35)),
+            Text(l.blurb(phase), style: const TextStyle(color: Colors.white, height: 1.35)),
             Align(
               alignment: Alignment.centerLeft,
               child: TextButton.icon(
                 style: TextButton.styleFrom(foregroundColor: Colors.white, padding: EdgeInsets.zero),
                 icon: const Icon(Icons.menu_book_outlined, size: 18),
-                label: const Text('About this phase'),
+                label: Text(l.aboutPhase),
                 onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => GuidePage(focus: phase))),
               ),
             ),
@@ -160,8 +155,11 @@ class _PhaseCard extends StatelessWidget {
                       children: [
                         Text(headline, style: const TextStyle(fontWeight: FontWeight.w700)),
                         Text(
-                          'Most likely ${fmt.format(f.next.modeDate)} · 80% between '
-                          '${fmt.format(fromDayNumber(lo))} and ${fmt.format(fromDayNumber(hi))}',
+                          l.mostLikelyRange(
+                            fmt.format(f.next.modeDate),
+                            fmt.format(fromDayNumber(lo)),
+                            fmt.format(fromDayNumber(hi)),
+                          ),
                           style: const TextStyle(fontSize: 12.5, color: Colors.white),
                         ),
                       ],
@@ -187,7 +185,8 @@ class _QuickActions extends StatelessWidget {
     final loggedToday = state.isLoggedStart(today);
     final p = state.periodOn(today);
     final canEnd = p != null && p.end == null && !loggedToday;
-    final name = state.settings.nameCap;
+    final l = context.l;
+    final name = l.her(state.settings);
     return Row(
       children: [
         if (!canEnd)
@@ -199,15 +198,13 @@ class _QuickActions extends StatelessWidget {
                 foregroundColor: loggedToday ? Theme.of(context).colorScheme.onSurface : null,
               ),
               icon: Icon(loggedToday ? Icons.check : Icons.water_drop),
-              label: Text(loggedToday ? 'Logged today' : 'Period started today'),
+              label: Text(loggedToday ? l.loggedToday : l.periodStartedToday),
               onPressed: loggedToday
                   ? () => state.removePeriod(state.data.periods.firstWhere((e) => dayNumber(e.start) == state.todayDay))
                   : () async {
                       await state.addPeriodStart(today);
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Logged. Forecast updated. Be extra sweet to $name today.')),
-                        );
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.loggedSnack(name))));
                       }
                     },
             ),
@@ -217,7 +214,7 @@ class _QuickActions extends StatelessWidget {
             child: OutlinedButton.icon(
               style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
               icon: const Icon(Icons.flag_outlined),
-              label: const Text('Period ended'),
+              label: Text(l.periodEnded),
               onPressed: () => state.setPeriodEnd(p, today),
             ),
           ),
@@ -237,7 +234,7 @@ class _NextDays extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionTitle('Next two weeks'),
+        _SectionTitle(context.l.nextTwoWeeks),
         SizedBox(
           height: 74,
           child: ListView.separated(
@@ -332,17 +329,13 @@ class _Empty extends StatelessWidget {
           children: [
             Icon(Icons.event_note_outlined, size: 56, color: theme.colorScheme.primary),
             const SizedBox(height: 12),
-            Text('No dates yet', style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
+            Text(context.l.emptyTitle, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 8),
-            Text(
-              'Log the first day of one of her periods (on the Calendar tab, or tap below if it started today) '
-              'and the forecast appears.',
-              textAlign: TextAlign.center,
-            ),
+            Text(context.l.emptyBody, textAlign: TextAlign.center),
             const SizedBox(height: 20),
             FilledButton.icon(
               icon: const Icon(Icons.water_drop),
-              label: const Text('Period started today'),
+              label: Text(context.l.periodStartedToday),
               onPressed: () => state.addPeriodStart(state.today),
             ),
           ],

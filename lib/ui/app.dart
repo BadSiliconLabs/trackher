@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart' show Intl;
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
@@ -6,6 +7,7 @@ import 'calendar_page.dart';
 import 'forecast_page.dart';
 import 'guide_page.dart';
 import 'home_page.dart';
+import 'l10n.dart';
 import 'notes_page.dart';
 import 'onboarding.dart';
 import 'settings_page.dart';
@@ -19,9 +21,14 @@ class TrackHerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final mode = context.select<AppState, String>((s) => s.settings.themeMode);
     final onboarded = context.select<AppState, bool>((s) => s.settings.onboarded);
+    final lang = context.select<AppState, String>((s) => s.lang);
+    Intl.defaultLocale = lang;
     return MaterialApp(
       title: kAppName,
       debugShowCheckedModeBanner: false,
+      locale: Locale(lang),
+      supportedLocales: L.supportedLocales,
+      localizationsDelegates: appLocalizationsDelegates,
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
       themeMode: switch (mode) {
@@ -44,8 +51,6 @@ class Shell extends StatefulWidget {
 class _ShellState extends State<Shell> with WidgetsBindingObserver {
   int _index = 0;
 
-  static const _titles = ['Today', 'Calendar', 'Forecast', 'Tips', 'Her notes'];
-
   @override
   void initState() {
     super.initState();
@@ -63,10 +68,15 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) context.read<AppState>().refresh();
   }
 
+  @override
+  void didChangeLocales(List<Locale>? locales) => context.read<AppState>().refresh();
+
   void goTo(int i) => setState(() => _index = i);
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l;
+    final titles = [l.navToday, l.navCalendar, l.navForecast, l.navTips, l.titleNotes];
     final pages = [
       HomePage(onNavigate: goTo),
       const CalendarPage(),
@@ -76,17 +86,17 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
     ];
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[_index], style: const TextStyle(fontWeight: FontWeight.w700)),
+        title: Text(titles[_index], style: const TextStyle(fontWeight: FontWeight.w700)),
         actions: [
           IconButton(
-            tooltip: 'Guide',
+            tooltip: l.guide,
             icon: const Icon(Icons.menu_book_outlined),
             onPressed: () => Navigator.of(
               context,
             ).push(MaterialPageRoute(builder: (_) => GuidePage(focus: context.read<AppState>().forecast?.likelyPhase))),
           ),
           IconButton(
-            tooltip: 'Settings',
+            tooltip: l.settings,
             icon: const Icon(Icons.settings_outlined),
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const SettingsPage())),
           ),
@@ -97,27 +107,31 @@ class _ShellState extends State<Shell> with WidgetsBindingObserver {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: goTo,
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.favorite_outline), selectedIcon: Icon(Icons.favorite), label: 'Today'),
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.calendar_month_outlined),
-            selectedIcon: Icon(Icons.calendar_month),
-            label: 'Calendar',
+            icon: const Icon(Icons.favorite_outline),
+            selectedIcon: const Icon(Icons.favorite),
+            label: l.navToday,
           ),
           NavigationDestination(
-            icon: Icon(Icons.insights_outlined),
-            selectedIcon: Icon(Icons.insights),
-            label: 'Forecast',
+            icon: const Icon(Icons.calendar_month_outlined),
+            selectedIcon: const Icon(Icons.calendar_month),
+            label: l.navCalendar,
           ),
           NavigationDestination(
-            icon: Icon(Icons.lightbulb_outline),
-            selectedIcon: Icon(Icons.lightbulb),
-            label: 'Tips',
+            icon: const Icon(Icons.insights_outlined),
+            selectedIcon: const Icon(Icons.insights),
+            label: l.navForecast,
           ),
           NavigationDestination(
-            icon: Icon(Icons.sticky_note_2_outlined),
-            selectedIcon: Icon(Icons.sticky_note_2),
-            label: 'Notes',
+            icon: const Icon(Icons.lightbulb_outline),
+            selectedIcon: const Icon(Icons.lightbulb),
+            label: l.navTips,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.sticky_note_2_outlined),
+            selectedIcon: const Icon(Icons.sticky_note_2),
+            label: l.navNotes,
           ),
         ],
       ),

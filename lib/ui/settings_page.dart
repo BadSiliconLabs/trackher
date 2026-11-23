@@ -9,7 +9,9 @@ import 'package:share_plus/share_plus.dart';
 import '../data/store.dart';
 import '../services/notifications.dart';
 import '../state/app_state.dart';
+import 'l10n.dart';
 import 'theme.dart';
+import 'widgets/language_menu.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -19,6 +21,7 @@ class SettingsPage extends StatelessWidget {
     final state = context.watch<AppState>();
     final s = state.settings;
     final theme = Theme.of(context);
+    final l = context.l;
     final notifOn = s.notificationsEnabled;
 
     Widget header(String t) => Padding(
@@ -27,25 +30,25 @@ class SettingsPage extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l.settings)),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 32),
         children: [
-          header('About her'),
+          header(l.aboutHer),
           ListTile(
             leading: const Icon(Icons.person_outline),
-            title: const Text('Name'),
-            subtitle: Text(s.herName.isEmpty ? 'Not set' : s.herName),
+            title: Text(l.name),
+            subtitle: Text(s.herName.isEmpty ? l.notSet : s.herName),
             onTap: () async {
               final c = TextEditingController(text: s.herName);
               final v = await showDialog<String>(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  title: const Text('Her name'),
+                  title: Text(l.herName),
                   content: TextField(controller: c, autofocus: true, textCapitalization: TextCapitalization.words),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-                    FilledButton(onPressed: () => Navigator.pop(ctx, c.text), child: const Text('Save')),
+                    TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l.cancel)),
+                    FilledButton(onPressed: () => Navigator.pop(ctx, c.text), child: Text(l.save)),
                   ],
                 ),
               );
@@ -54,11 +57,11 @@ class SettingsPage extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.water_drop_outlined),
-            title: const Text('Typical period length'),
+            title: Text(l.typicalPeriodLength),
             subtitle: Text(
               state.learnedPeriodLength
-                  ? 'Learned: ${state.periodLength} days (from logged end dates)'
-                  : '${s.defaultPeriodLength} days. Log end dates to learn it automatically',
+                  ? l.learnedPeriodLength(state.periodLength)
+                  : l.defaultPeriodLength(s.defaultPeriodLength),
             ),
           ),
           if (!state.learnedPeriodLength)
@@ -67,14 +70,14 @@ class SettingsPage extends StatelessWidget {
               max: 10,
               divisions: 8,
               value: s.defaultPeriodLength.toDouble(),
-              label: '${s.defaultPeriodLength} days',
+              label: l.nDays(s.defaultPeriodLength),
               onChanged: (v) => state.updateSettings((s) => s.defaultPeriodLength = v.round()),
             ),
-          header('Notifications'),
+          header(l.notifications),
           SwitchListTile(
             secondary: const Icon(Icons.notifications_outlined),
-            title: const Text('Notifications'),
-            subtitle: const Text('Lock-screen text stays discreet'),
+            title: Text(l.notifications),
+            subtitle: Text(l.notifDiscreet),
             value: notifOn,
             onChanged: (v) async {
               await state.updateSettings((s) => s.notificationsEnabled = v);
@@ -83,10 +86,8 @@ class SettingsPage extends StatelessWidget {
           ),
           SwitchListTile(
             secondary: const Icon(Icons.water_drop_outlined),
-            title: const Text('Period coming soon'),
-            subtitle: Text(
-              '${s.periodSoonLeadDays} day${s.periodSoonLeadDays == 1 ? '' : 's'} before the most likely start',
-            ),
+            title: Text(l.notifPeriodSoon),
+            subtitle: Text(l.notifPeriodSoonSub(s.periodSoonLeadDays)),
             value: s.notifyPeriodSoon,
             onChanged: notifOn ? (v) => state.updateSettings((s) => s.notifyPeriodSoon = v) : null,
           ),
@@ -95,7 +96,7 @@ class SettingsPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  const Text('Lead days'),
+                  Text(l.leadDays),
                   Expanded(
                     child: Slider(
                       min: 1,
@@ -111,27 +112,27 @@ class SettingsPage extends StatelessWidget {
             ),
           SwitchListTile(
             secondary: const Icon(Icons.cloud_outlined),
-            title: const Text('PMS window starting'),
+            title: Text(l.notifPms),
             value: s.notifyPms,
             onChanged: notifOn ? (v) => state.updateSettings((s) => s.notifyPms = v) : null,
           ),
           SwitchListTile(
             secondary: const Icon(Icons.lightbulb_outline),
-            title: const Text('Daily tip'),
+            title: Text(l.notifDaily),
             value: s.notifyDailyTip,
             onChanged: notifOn ? (v) => state.updateSettings((s) => s.notifyDailyTip = v) : null,
           ),
           SwitchListTile(
             secondary: const Icon(Icons.auto_awesome_outlined),
-            title: const Text('Fertile window'),
-            subtitle: const Text('Informational only, not contraception'),
+            title: Text(l.notifFertile),
+            subtitle: Text(l.notifFertileSub),
             value: s.notifyFertile,
             onChanged: notifOn ? (v) => state.updateSettings((s) => s.notifyFertile = v) : null,
           ),
           ListTile(
             enabled: notifOn,
             leading: const Icon(Icons.schedule),
-            title: const Text('Notification time'),
+            title: Text(l.notifTime),
             trailing: Text(TimeOfDay(hour: s.notifyHour, minute: s.notifyMinute).format(context)),
             onTap: () async {
               final t = await showTimePicker(
@@ -146,46 +147,57 @@ class SettingsPage extends StatelessWidget {
               }
             },
           ),
-          header('Appearance'),
+          header(l.appearance),
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: Text(l.language),
+            trailing: DropdownButton<String>(
+              value: s.language,
+              underline: const SizedBox.shrink(),
+              onChanged: (v) => state.updateSettings((s) => s.language = v ?? 'system'),
+              items: [
+                for (final code in ['system', ...AppState.supportedLanguages])
+                  DropdownMenuItem(value: code, child: Text(languageLabel(l, code))),
+              ],
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'system', label: Text('System')),
-                ButtonSegment(value: 'light', label: Text('Light')),
-                ButtonSegment(value: 'dark', label: Text('Dark')),
+              segments: [
+                ButtonSegment(value: 'system', label: Text(l.themeSystem)),
+                ButtonSegment(value: 'light', label: Text(l.themeLight)),
+                ButtonSegment(value: 'dark', label: Text(l.themeDark)),
               ],
               selected: {s.themeMode},
               onSelectionChanged: (v) => state.updateSettings((s) => s.themeMode = v.first),
             ),
           ),
-          header('Your data (stored only on this phone)'),
+          header(l.dataHeader),
           ListTile(
             leading: const Icon(Icons.upload_file),
-            title: const Text('Export backup'),
-            subtitle: const Text('Save or send a JSON file'),
+            title: Text(l.exportBackup),
+            subtitle: Text(l.exportSub),
             onTap: () => _export(context, state),
           ),
           ListTile(
             leading: const Icon(Icons.download),
-            title: const Text('Import backup'),
-            subtitle: const Text('Replaces current data'),
+            title: Text(l.importBackup),
+            subtitle: Text(l.importSub),
             onTap: () => _import(context, state),
           ),
           ListTile(
             leading: Icon(Icons.delete_forever_outlined, color: theme.colorScheme.error),
-            title: Text('Delete all data', style: TextStyle(color: theme.colorScheme.error)),
+            title: Text(l.deleteAll, style: TextStyle(color: theme.colorScheme.error)),
             onTap: () async {
               final ok = await showDialog<bool>(
                 context: context,
                 builder: (ctx) => AlertDialog(
-                  title: const Text('Delete everything?'),
-                  content: const Text(
-                    'All dates, notes, logs and settings will be erased from this phone. This can\'t be undone.',
-                  ),
+                  title: Text(l.deleteConfirmTitle),
+                  content: Text(l.deleteConfirmBody),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-                    FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Delete')),
+                    TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l.cancel)),
+                    FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l.delete)),
                   ],
                 ),
               );
@@ -195,47 +207,39 @@ class SettingsPage extends StatelessWidget {
               }
             },
           ),
-          header('About'),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              '$kAppName estimates cycles statistically from the dates you enter. It is not medical advice and must not be '
-              'used as contraception. Every person is different, so talk with her. If her cycles are often shorter than 21 '
-              'or longer than 35 days, or very painful, suggest seeing a doctor.',
-            ),
-          ),
+          header(l.about),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text(l.aboutBody(kAppName))),
         ],
       ),
     );
   }
 
   Future<void> _export(BuildContext context, AppState state) async {
+    final subject = context.l.backupSubject(kAppName);
     final dir = await getTemporaryDirectory();
     final now = DateTime.now();
-    final f = File(
-      '${dir.path}/tempo-backup-${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}.json',
-    );
+    String two(int v) => v.toString().padLeft(2, '0');
+    final f = File('${dir.path}/tempo-backup-${now.year}-${two(now.month)}-${two(now.day)}.json');
     await f.writeAsString(state.exportJson());
     await SharePlus.instance.share(
       ShareParams(
         files: [XFile(f.path, mimeType: 'application/json')],
-        subject: '$kAppName backup',
+        subject: subject,
       ),
     );
   }
 
   Future<void> _import(BuildContext context, AppState state) async {
     final messenger = ScaffoldMessenger.of(context);
+    final l = context.l;
     try {
       final files = await FilePicker.pickFiles(type: FileType.any);
       if (files.isEmpty) return;
       final data = Store.decode(await files.first.xFile.readAsString());
       await state.importData(data);
-      messenger.showSnackBar(
-        SnackBar(content: Text('Imported ${data.periods.length} periods and ${data.notes.length} notes')),
-      );
+      messenger.showSnackBar(SnackBar(content: Text(l.imported(data.periods.length, data.notes.length))));
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text("That file isn't a valid $kAppName backup")));
+      messenger.showSnackBar(SnackBar(content: Text(l.invalidBackup(kAppName))));
     }
   }
 }

@@ -31,6 +31,14 @@ local-only and quick.**
   what's happening, how she may feel, how to help, and what to avoid. It also covers what's normal, when to
   suggest a doctor, contraception, and how the forecast works.
 
+## 1c. Languages (v0.3)
+- English, Italian and Spanish. The app follows the phone language by default, and you can override it in
+  Settings or with the globe button on the welcome screen.
+- UI strings use `gen-l10n` ARB files in `lib/l10n/`. Tips are in `assets/tips/<lang>.json`, with the same IDs,
+  phases and categories in every language (a test enforces this). The guide is typed data in `lib/ui/guide/guide_<lang>.dart`.
+- Notifications, dates, month names and decimal separators all follow the selected language.
+- Adding a language means one ARB file, one tips JSON, one guide file, and an entry in `AppState.supportedLanguages`.
+
 ## 2. Decisions made
 
 | Topic | Decision |

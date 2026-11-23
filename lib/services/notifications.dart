@@ -1,9 +1,12 @@
+import 'dart:ui' show Locale;
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../engine/day.dart';
+import '../l10n/app_localizations.dart';
 import '../state/app_state.dart';
 
 /// Schedules all local notifications ahead of time; rescheduled whenever
@@ -67,6 +70,7 @@ class NotificationService {
     }
 
     final today = state.todayDay;
+    final l = lookupL(Locale(state.lang));
 
     if (f != null) {
       for (final up in f.upcoming) {
@@ -75,21 +79,13 @@ class NotificationService {
         final range = ((hi - lo) / 2).ceil();
         if (s.notifyPeriodSoon) {
           final lead = s.periodSoonLeadDays;
-          await at(
-            up.mode - lead,
-            'Tempo',
-            'Heads-up for about $lead day${lead == 1 ? '' : 's'} from now (±$range). Open the app for details.',
-          );
+          await at(up.mode - lead, 'Tempo', l.notifHeadsUp(lead, range));
         }
         if (s.notifyPms) {
-          await at(
-            up.mode - 6,
-            'Tempo',
-            'A sensitive week likely starts now. Extra patience and kindness go a long way.',
-          );
+          await at(up.mode - 6, 'Tempo', l.notifSensitive);
         }
         if (s.notifyFertile) {
-          await at(up.mode - 19, 'Tempo', 'A new window starts around now. Open for details.');
+          await at(up.mode - 19, 'Tempo', l.notifWindow);
         }
       }
     }
@@ -98,7 +94,7 @@ class NotificationService {
       for (var d = today; d <= today + 30; d++) {
         final tip = state.tipForDay(d);
         if (tip == null) continue;
-        await at(d, 'Tip: ${tip.title}', tip.text);
+        await at(d, l.notifTip(tip.title), tip.text);
       }
     }
   }
